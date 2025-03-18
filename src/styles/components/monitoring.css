@@ -1,0 +1,61 @@
+.system-monitoring {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.system-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin: 2rem 0;
+}
+
+.health-status {
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  display: inline-block;
+}
+
+.health-status.good {
+  background: #e6ffe6;
+  color: #008000;
+}
+
+.health-status.warning {
+  background: #fff3e6;
+  color: #ff8c00;
+}
+
+.health-status.critical {
+  background: #ffe6e6;
+  color: #ff0000;
+}
+
+.alerts-section {
+  margin-top: 2rem;
+}
+
+.alert-item {
+  padding: 1rem;
+  margin: 0.5rem 0;
+  border-radius: 5px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.alert-item.critical {
+  background: #ffe6e6;
+  border-left: 4px solid #ff0000;
+}
+
+.alert-item.warning {
+  background: #fff3e6;
+  border-left: 4px solid #ff8c00;
+}
+
+.alert-item.info {
+  background: #e6f3ff;
+  border-left: 4px solid #0066cc;
+} 

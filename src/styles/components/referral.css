@@ -1,0 +1,50 @@
+.referral-dashboard {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.referral-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin: 2rem 0;
+}
+
+.stat-card {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.referral-link-section {
+  margin-top: 2rem;
+}
+
+.link-container {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.link-container input {
+  flex: 1;
+  padding: 0.8rem;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+.link-container button {
+  padding: 0.8rem 1.5rem;
+  background: linear-gradient(45deg, #ff4b4b, #ff6b6b);
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.link-container button:hover {
+  transform: translateY(-2px);
+} 
