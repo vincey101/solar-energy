@@ -13,8 +13,8 @@ const slides = [
   {
     id: 2,
     image: slider2,
-    title: 'Smart Solar Technology',
-    description: 'Advanced solutions for modern energy needs',
+    title: 'Smart Solar\nTechnology',
+    description: 'Harness the power of renewable energy for a sustainable future',
   },
   {
     id: 3,
@@ -42,9 +42,9 @@ function HeroSlider() {
           key={slide.id}
           className={`slide ${index === currentSlide ? 'active' : ''}`}
         >
-          <img 
-            src={slide.image} 
-            alt={slide.title} 
+          <img
+            src={slide.image}
+            alt={slide.title}
             onError={(e) => {
               console.error(`Failed to load image: ${slide.image}`)
               e.target.style.backgroundColor = '#333'
