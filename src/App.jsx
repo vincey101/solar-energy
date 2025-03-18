@@ -20,6 +20,7 @@ import PowerSection from './components/home/PowerSection'
 import ReviewSection from './components/home/ReviewSection'
 import { useEffect } from 'react'
 import Footer from './components/footer/Footer'
+import MobileMenu from './components/navigation/MobileMenu'
 
 const navItems = [
   {
@@ -99,10 +100,13 @@ function App() {
     <Router>
       <div className="app">
         <nav className="navbar">
+          <div className="mobile-only">
+            <MobileMenu navItems={navItems} />
+          </div>
           <a href="/" className="logo">
             <span className="logo-solar">Solar</span><span className="logo-energy">Energy</span>
           </a>
-          <ul className="nav-links">
+          <ul className="nav-links desktop-only">
             {navItems.map((item, index) => (
               <li key={index} className="nav-item">
                 <a href="#" className="nav-link">
@@ -134,7 +138,7 @@ function App() {
                       {dropdownItem.title}
                     </a>
                   ))}
-      </div>
+                </div>
               </li>
             ))}
           </ul>
