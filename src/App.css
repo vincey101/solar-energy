@@ -387,6 +387,12 @@
     padding: 0 1rem;
     white-space: pre-line;
     line-height: 1.2;
+    background: linear-gradient(45deg, #ff4b4b, #ff6b6b);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    display: inline-block;
+    width: 100%;
   }
 
   .slide-content p {
