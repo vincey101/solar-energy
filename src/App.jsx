@@ -24,6 +24,8 @@ import MobileMenu from './components/navigation/MobileMenu'
 import GadgetLibrary from './components/calculator/GadgetLibrary'
 import Calculator from './components/calculator/Calculator'
 import GetStarted from './components/contact/GetStarted'
+import SystemDesign from './components/design/SystemDesign'
+import EquipmentRecommendation from './components/design/EquipmentRecommendation'
 
 const navItems = [
   {
@@ -39,7 +41,7 @@ const navItems = [
     dropdownItems: [
       { title: 'System Design', path: '/system-design' },
       { title: 'Equipment Recommendation', path: '/equipment' },
-      { title: 'System Cost Estimation', path: '/cost-estimation' },
+      // { title: 'System Cost Estimation', path: '/cost-estimation' },
     ],
   },
   {
@@ -173,6 +175,8 @@ function App() {
           <Route path="/gadget-library" element={<GadgetLibrary />} />
           <Route path="/calculator" element={<Calculator />} />
           <Route path="/get-started" element={<GetStarted />} />
+          <Route path="/system-design" element={<SystemDesign />} />
+          <Route path="/equipment" element={<EquipmentRecommendation />} />
         </Routes>
         <Footer />
       </div>

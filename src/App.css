@@ -1754,3 +1754,550 @@
 .form-group textarea::-webkit-scrollbar-thumb:hover {
   background: #ccc;
 }
+
+/* System Design Styles */
+.system-design {
+  min-height: 100vh;
+}
+
+.design-hero {
+  height: 40vh;
+  min-height: 300px;
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: white;
+}
+
+.design-header h1 {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.design-content {
+  max-width: 1200px;
+  margin: -100px auto 4rem;
+  padding: 0 2rem;
+}
+
+.design-requirements {
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin-bottom: 2rem;
+}
+
+.requirements-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem;
+  margin-top: 1.5rem;
+}
+
+.requirement-input {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.requirement-input label {
+  font-weight: 500;
+  color: #333;
+}
+
+.requirement-input input {
+  padding: 0.8rem;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 1rem;
+  background-color: #fff;
+  color: #333;
+}
+
+/* Add hover and focus states for better UX */
+.requirement-input input:hover {
+  border-color: #ccc;
+}
+
+.requirement-input input:focus {
+  outline: none;
+  border-color: #ff6b6b;
+  box-shadow: 0 0 0 2px rgba(255, 107, 107, 0.1);
+}
+
+.recommendations-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+  margin-top: 1.5rem;
+}
+
+.recommendation-card {
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.recommendation-icon {
+  font-size: 2.5rem;
+  color: #ff6b6b;
+  margin-bottom: 1rem;
+}
+
+.recommendation-card h3 {
+  color: #333;
+  margin-bottom: 1.5rem;
+}
+
+.recommendation-details {
+  text-align: left;
+}
+
+.recommendation-details p {
+  margin: 0.5rem 0;
+  color: #666;
+}
+
+.recommendation-details strong {
+  color: #333;
+}
+
+@media (max-width: 768px) {
+
+  .requirements-grid,
+  .recommendations-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .design-content {
+    margin-top: -50px;
+    padding: 0 1rem;
+  }
+
+  .design-header h1 {
+    font-size: 2rem;
+  }
+}
+
+.design-requirements h2,
+.design-recommendations h2 {
+  color: #333;
+  font-size: 1.8rem;
+  margin-bottom: 1.5rem;
+}
+
+/* Update the existing styles to ensure consistency */
+.design-requirements {
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin-bottom: 2rem;
+}
+
+.design-recommendations {
+  margin-top: 2rem;
+}
+
+.calculator-data-notice {
+  background: #f8f9fa;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  border: 1px solid #e9ecef;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+.calculator-data-notice p {
+  color: #495057;
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.clear-calculator-data {
+  padding: 0.5rem 1rem;
+  background: #e9ecef;
+  border: none;
+  border-radius: 4px;
+  color: #495057;
+  cursor: pointer;
+  font-size: 0.8rem;
+  transition: all 0.2s ease;
+}
+
+.clear-calculator-data:hover {
+  background: #dee2e6;
+}
+
+/* Equipment Recommendation Styles */
+.equipment-recommendation {
+  min-height: 100vh;
+}
+
+.equipment-hero {
+  height: 40vh;
+  min-height: 300px;
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: white;
+}
+
+.equipment-content {
+  max-width: 1200px;
+  margin: -100px auto 4rem;
+  padding: 0 2rem;
+}
+
+.equipment-section {
+  margin-bottom: 3rem;
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.equipment-section h2 {
+  color: #333;
+  font-size: 1.8rem;
+  margin-bottom: 1.5rem;
+}
+
+.equipment-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+}
+
+.equipment-card {
+  position: relative;
+  background: white;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+}
+
+.equipment-card.recommended {
+  border-color: #ff6b6b;
+  box-shadow: 0 4px 12px rgba(255, 107, 107, 0.1);
+}
+
+.recommended-badge {
+  position: absolute;
+  top: -12px;
+  right: 1rem;
+  background: #ff6b6b;
+  color: white;
+  padding: 0.25rem 1rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.specs-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+.spec-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.spec-item span {
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.spec-item strong {
+  color: #333;
+  font-size: 1.1rem;
+}
+
+.features-list {
+  margin-top: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.feature-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.feature-item svg {
+  color: #ff6b6b;
+}
+
+@media (max-width: 1024px) {
+  .equipment-cards {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+
+  .equipment-content {
+    padding: 0 1.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .equipment-hero {
+    height: 30vh;
+  }
+
+  .equipment-header h1 {
+    font-size: 2rem;
+  }
+
+  .equipment-header p {
+    font-size: 1rem;
+  }
+
+  .equipment-content {
+    margin-top: -50px;
+    padding: 0 1rem;
+  }
+
+  .equipment-section {
+    padding: 1.5rem;
+  }
+
+  .equipment-section h2 {
+    font-size: 1.5rem;
+  }
+
+  .equipment-cards {
+    grid-template-columns: 1fr;
+  }
+
+  .manufacturer-name {
+    font-size: 1.2rem;
+  }
+
+  .specs-grid {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+
+  /* Cost estimation responsive styles */
+  .cost-breakdown {
+    padding: 1rem;
+  }
+
+  .cost-section {
+    margin-bottom: 1.5rem;
+  }
+
+  .cost-section h3 {
+    font-size: 1.1rem;
+  }
+
+  .cost-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .cost-item {
+    padding: 0.6rem;
+    font-size: 0.9rem;
+  }
+
+  .total-cost {
+    padding: 1.5rem 1rem;
+  }
+
+  .cost-amount {
+    font-size: 1.8rem;
+  }
+
+  .cost-note {
+    font-size: 0.8rem;
+  }
+
+  /* Adjust card spacing */
+  .equipment-card {
+    padding: 1.2rem;
+  }
+
+  .feature-item {
+    font-size: 0.85rem;
+  }
+
+  /* Make badges more visible on mobile */
+  .recommended-badge {
+    right: 50%;
+    transform: translateX(50%);
+    white-space: nowrap;
+  }
+}
+
+/* Small phones */
+@media (max-width: 480px) {
+  .equipment-hero {
+    height: 25vh;
+    min-height: 200px;
+  }
+
+  .equipment-header h1 {
+    font-size: 1.8rem;
+  }
+
+  .equipment-content {
+    margin-top: -30px;
+  }
+
+  .equipment-section {
+    padding: 1rem;
+  }
+
+  .manufacturer-name {
+    font-size: 1.1rem;
+  }
+
+  .model-name {
+    font-size: 0.9rem;
+  }
+
+  .spec-item strong {
+    font-size: 1rem;
+  }
+
+  .cost-amount {
+    font-size: 1.5rem;
+  }
+}
+
+/* Add these styles for manufacturer branding */
+.manufacturer-brand {
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #eee;
+}
+
+.manufacturer-name {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 0.25rem;
+}
+
+.model-name {
+  color: #666;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+/* Update equipment card styles */
+.equipment-card {
+  position: relative;
+  background: white;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+}
+
+.equipment-card h3 {
+  margin-bottom: 1rem;
+}
+
+/* Cost Estimation Styles */
+.cost-breakdown {
+  background: white;
+  border-radius: 8px;
+  padding: 2rem;
+}
+
+.cost-section {
+  margin-bottom: 2rem;
+}
+
+.cost-section h3 {
+  color: #333;
+  margin-bottom: 1rem;
+  font-size: 1.2rem;
+}
+
+.cost-grid {
+  display: grid;
+  gap: 1rem;
+}
+
+.cost-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem;
+  background: #f8f9fa;
+  border-radius: 6px;
+}
+
+.cost-item.total {
+  background: #e9ecef;
+  font-weight: 500;
+}
+
+.cost-item span {
+  color: #495057;
+}
+
+.cost-item strong {
+  color: #333;
+}
+
+.total-cost {
+  margin-top: 2rem;
+  text-align: center;
+  padding: 2rem;
+  background: #f8f9fa;
+  border-radius: 8px;
+}
+
+.total-cost h3 {
+  color: #333;
+  margin-bottom: 1rem;
+}
+
+.cost-amount {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #ff6b6b;
+  margin-bottom: 1rem;
+}
+
+.cost-note {
+  color: #666;
+  font-size: 0.9rem;
+}
+
+@media (max-width: 768px) {
+  .cost-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .cost-amount {
+    font-size: 2rem;
+  }
+}

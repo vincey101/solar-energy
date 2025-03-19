@@ -60,6 +60,10 @@ function Calculator() {
     setTotalPower(calculations.totalPower)
     setDailyConsumption(calculations.dailyConsumption)
     setYearlyConsumption(calculations.yearlyConsumption)
+
+    // Save to localStorage
+    localStorage.setItem('dailyConsumption', calculations.dailyConsumption.toString())
+    localStorage.setItem('calculatorTimestamp', new Date().toISOString())
   }, [selectedGadgets])
 
   useEffect(() => {
