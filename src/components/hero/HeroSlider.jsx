@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react'
 import slider1 from '../../assets/images/slider1.jpg'
 import slider2 from '../../assets/images/slider2.jpg'
-import slider3 from '../../assets/images/slider3.jpg'
 
 const slides = [
   {
@@ -15,13 +14,7 @@ const slides = [
     image: slider2,
     title: 'Smart Solar\nTechnology',
     description: 'Harness the power of renewable energy for a sustainable future',
-  },
-  {
-    id: 3,
-    image: slider3,
-    title: 'Affordable Green\nEnergy',
-    description: 'Make the switch to solar power today',
-  },
+  }
 ]
 
 function HeroSlider() {
