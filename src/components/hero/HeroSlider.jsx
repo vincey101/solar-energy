@@ -7,7 +7,7 @@ const slides = [
   {
     id: 1,
     image: slider1,
-    title: 'Sustainable\nEnergy Solutions',
+    title: 'Sustainable Energy\nSolutions',
     description: 'Power your home with clean, renewable solar energy',
   },
   {
@@ -19,7 +19,7 @@ const slides = [
   {
     id: 3,
     image: slider3,
-    title: 'Affordable\nGreen Energy',
+    title: 'Affordable Green\nEnergy',
     description: 'Make the switch to solar power today',
   },
 ]

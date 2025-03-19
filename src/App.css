@@ -192,9 +192,9 @@
   z-index: 1;
 }
 
-/* Remove or update this if it exists */
+/* Remove any specific third slide styling if it exists */
 .slide:nth-child(3)::before {
-  background: rgba(0, 0, 0, 0.5); /* Make consistent with other slides */
+  background: rgba(0, 0, 0, 0.5); /* Same as other slides */
 }
 
 .slide-content {
