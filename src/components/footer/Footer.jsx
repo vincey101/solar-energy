@@ -38,10 +38,7 @@ function Footer() {
         <div className="footer-section">
           <h3>Support</h3>
           <ul>
-            <li><a href="#" onClick={(e) => {
-              e.preventDefault()
-              alert('Contact support at: support@solarenergy.com')
-            }}>Contact Support</a></li>
+            <li><a href="/get-started">Contact Support</a></li>
             <li><a href="/resources">Resources</a></li>
             <li><a href="/faq">FAQ</a></li>
           </ul>

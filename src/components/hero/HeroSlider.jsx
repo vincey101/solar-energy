@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import slider1 from '../../assets/images/slider1.jpg'
 import slider2 from '../../assets/images/slider2.jpg'
 import slider3 from '../../assets/images/slider3.jpg'
+import * as tf from '@tensorflow/tfjs'
 
 const slides = [
   {
@@ -26,6 +27,7 @@ const slides = [
 
 function HeroSlider() {
   const [currentSlide, setCurrentSlide] = useState(0)
+  const [model, setModel] = useState(null)
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -34,6 +36,36 @@ function HeroSlider() {
 
     return () => clearInterval(timer)
   }, [])
+
+  useEffect(() => {
+    async function loadModel() {
+      const loadedModel = await tf.loadLayersModel('path/to/your/model.json')
+      setModel(loadedModel)
+    }
+    loadModel()
+  }, [])
+
+  const predictConsumption = async (gadgetData) => {
+    if (!model) return
+
+    const input = tf.tensor2d([
+      gadgetData.map(g => [
+        g.powerRating,
+        g.customHours,
+        g.quantity,
+        g.energyEfficiency === 'A+++' ? 4 :
+          g.energyEfficiency === 'A++' ? 3 :
+            g.energyEfficiency === 'A+' ? 2 : 1
+      ])
+    ])
+
+    const prediction = await model.predict(input).data()
+    return {
+      peakHours: prediction[0] > 0.5 ? "daytime" : "evening",
+      monthlyTrend: prediction[1],
+      optimizationScore: prediction[2]
+    }
+  }
 
   return (
     <div className="hero-slider">

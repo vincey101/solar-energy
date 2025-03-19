@@ -9,6 +9,8 @@
 .app {
   min-height: 100vh;
   font-family: 'Inter', sans-serif;
+  background: #f5f5f5;
+  /* Light gray instead of white */
 }
 
 /* Navigation */
@@ -188,13 +190,15 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.5); /* Simplified overlay */
+  background: rgba(0, 0, 0, 0.5);
+  /* Simplified overlay */
   z-index: 1;
 }
 
 /* Remove any specific third slide styling if it exists */
 .slide:nth-child(3)::before {
-  background: rgba(0, 0, 0, 0.5); /* Same as other slides */
+  background: rgba(0, 0, 0, 0.5);
+  /* Same as other slides */
 }
 
 .slide-content {
@@ -269,6 +273,8 @@
     height: 60px;
     display: flex;
     align-items: center;
+    background: rgba(19, 19, 19, 0.95);
+    /* Dark background for mobile */
   }
 
   .logo {
@@ -848,4 +854,903 @@
     cursor: pointer;
     padding: 0.5rem;
   }
+}
+
+/* Gadget Library Styles */
+.gadget-library {
+  padding: 0;
+  min-height: 100vh;
+  background: white;
+}
+
+.gadget-hero {
+  height: 300px;
+  width: 100%;
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 3rem;
+  position: relative;
+}
+
+.gadget-header {
+  text-align: center;
+  width: 100%;
+  position: relative;
+  z-index: 1;
+}
+
+.gadget-header h1 {
+  font-size: 3rem;
+  color: white;
+  margin-bottom: 1rem;
+}
+
+.gadget-header p {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 1.2rem;
+}
+
+.gadget-content {
+  width: 100%;
+  padding: 0 2rem;
+}
+
+.gadget-controls {
+  max-width: 800px;
+  margin: 0 auto 3rem;
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  padding: 0 1rem;
+}
+
+.search-box,
+.filter-box {
+  display: flex;
+  align-items: center;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 0.8rem 1.2rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.search-box {
+  flex: 1;
+  max-width: 500px;
+}
+
+.search-icon,
+.filter-icon {
+  color: #666;
+  margin-right: 0.8rem;
+  font-size: 1.2rem;
+}
+
+.search-box input {
+  border: none;
+  outline: none;
+  width: 100%;
+  font-size: 1.1rem;
+  background: transparent;
+  color: #333;
+}
+
+.search-box input::placeholder {
+  color: #999;
+}
+
+.filter-box select {
+  border: none;
+  outline: none;
+  font-size: 1.1rem;
+  color: #333;
+  background: transparent;
+  cursor: pointer;
+  padding-right: 2rem;
+  min-width: 120px;
+}
+
+.gadget-grid {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+  padding: 0 2rem;
+}
+
+.gadget-card {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.gadget-info {
+  margin-bottom: 1.5rem;
+  position: relative;
+}
+
+.gadget-info h3 {
+  font-size: 1.2rem;
+  color: #333;
+  margin-bottom: 0.5rem;
+}
+
+.brand {
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.efficiency-badge {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: white;
+  /* Default color */
+}
+
+/* Add these specific efficiency badge styles */
+.efficiency-badge[data-rating="A+++"] {
+  background: #00c853;
+  /* Darkest green */
+}
+
+.efficiency-badge[data-rating="A++"] {
+  background: #64dd17;
+  /* Medium green */
+}
+
+.efficiency-badge[data-rating="A+"] {
+  background: #aeea00;
+  /* Light green */
+}
+
+.efficiency-badge[data-rating="A"] {
+  background: #ffd600;
+  /* Yellow */
+  color: #333;
+  /* Dark text for better contrast on yellow */
+}
+
+.power-details {
+  border-top: 1px solid #eee;
+  padding-top: 1rem;
+}
+
+.detail-item {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.detail-item span {
+  color: #666;
+}
+
+.detail-item strong {
+  color: #333;
+}
+
+@media (max-width: 768px) {
+  .gadget-controls {
+    flex-direction: column;
+    gap: 1rem;
+    padding: 0 1rem;
+  }
+
+  .search-box,
+  .filter-box {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .filter-box {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .filter-box select {
+    flex: 1;
+    min-width: unset;
+    width: 100%;
+  }
+
+  .search-box input {
+    width: 100%;
+  }
+
+  .gadget-grid {
+    grid-template-columns: 1fr;
+    padding: 0 1rem;
+  }
+}
+
+/* Add styles for even smaller screens */
+@media (max-width: 480px) {
+  .gadget-controls {
+    margin-bottom: 2rem;
+  }
+
+  .search-box,
+  .filter-box {
+    padding: 0.6rem 1rem;
+  }
+}
+
+/* Update navbar behavior for white background pages */
+.navbar-white {
+  background: rgba(19, 19, 19, 0.95);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.no-results {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 3rem;
+  background: #f8f8f8;
+  border-radius: 12px;
+  margin: 2rem 0;
+}
+
+.no-results p {
+  color: #666;
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+}
+
+.reset-search {
+  background: #ff6b6b;
+  color: white;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.reset-search:hover {
+  background: #ff5252;
+}
+
+.efficiency-guide {
+  max-width: 1000px;
+  margin: 4rem auto;
+  padding: 2rem;
+  background: #f8f8f8;
+  border-radius: 12px;
+  text-align: center;
+}
+
+.efficiency-guide h2 {
+  color: #333;
+  margin-bottom: 2rem;
+  font-size: 1.8rem;
+}
+
+.efficiency-ratings {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 2rem;
+  justify-items: center;
+}
+
+.rating-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.rating-badge {
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  color: white;
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+.rating-item p {
+  color: #666;
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+.a-plus-plus-plus {
+  background: #00c853;
+}
+
+.a-plus-plus {
+  background: #64dd17;
+}
+
+.a-plus {
+  background: #aeea00;
+}
+
+.a {
+  background: #ffd600;
+  color: #333;
+}
+
+@media (max-width: 768px) {
+  .efficiency-guide {
+    margin: 3rem 1rem;
+  }
+
+  .efficiency-ratings {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+}
+
+/* Calculator Styles */
+.calculator {
+  min-height: 100vh;
+  background: #f5f5f5;
+}
+
+.calculator-hero {
+  height: 300px;
+  width: 100%;
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: white;
+  margin-bottom: 3rem;
+}
+
+.calculator-hero h1 {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.calculator-content {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.calculator-main {
+  background: white;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.gadget-picker {
+  margin-bottom: 2rem;
+}
+
+.gadget-select {
+  width: 100%;
+  padding: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 1rem;
+  color: #333;
+  background: white;
+  cursor: pointer;
+  outline: none;
+}
+
+.gadget-select:focus {
+  border-color: #ff6b6b;
+}
+
+/* Update selected items styling */
+.selected-item {
+  display: grid;
+  grid-template-columns: 2fr 1fr auto auto;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 1.5rem;
+  background: #f8f8f8;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
+
+.calculator-results {
+  background: #333;
+  color: white;
+  border-radius: 12px;
+  padding: 2rem;
+  margin-top: 2rem;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+}
+
+.result-item {
+  text-align: center;
+}
+
+.result-item span {
+  display: block;
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+  color: #999;
+}
+
+.result-item strong {
+  font-size: 2rem;
+  color: #ff6b6b;
+}
+
+@media (max-width: 1024px) {
+  .calculator-content {
+    grid-template-columns: 1fr;
+  }
+
+  .gadget-picker {
+    position: static;
+  }
+}
+
+@media (max-width: 768px) {
+  .calculator-content {
+    padding: 1rem;
+  }
+
+  .calculator-main {
+    padding: 1.5rem;
+  }
+
+  .selected-item {
+    grid-template-columns: 1fr;
+    gap: 1.2rem;
+    padding: 1.2rem;
+  }
+
+  .gadget-details {
+    text-align: center;
+  }
+
+  .quantity-control {
+    justify-content: center;
+    width: fit-content;
+    margin: 0 auto;
+  }
+
+  .hours-wrapper {
+    margin: 0 auto;
+  }
+
+  .remove-gadget {
+    width: fit-content;
+    margin: 0 auto;
+  }
+
+  .calculator-results {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    padding: 1.5rem;
+    margin-top: 1.5rem;
+  }
+
+  .result-item {
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+  }
+
+  .result-item strong {
+    font-size: 1.8rem;
+  }
+
+  .calculator-hero {
+    height: 250px;
+    margin-bottom: 2rem;
+  }
+
+  .calculator-hero h1 {
+    font-size: 2.5rem;
+  }
+
+  .calculator-subtitle {
+    font-size: 1rem;
+    padding: 0 1rem;
+  }
+
+  .gadget-select {
+    padding: 0.8rem;
+    font-size: 0.95rem;
+  }
+}
+
+/* Add even smaller screen styles */
+@media (max-width: 480px) {
+  .calculator-hero h1 {
+    font-size: 2rem;
+  }
+
+  .calculator-main {
+    padding: 1rem;
+  }
+
+  .selected-item {
+    padding: 1rem;
+  }
+
+  .gadget-details h3 {
+    font-size: 1.1rem;
+  }
+
+  .result-item strong {
+    font-size: 1.5rem;
+  }
+}
+
+.calculator-header {
+  text-align: center;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.calculator-subtitle {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #fff;
+  margin-top: 1rem;
+  opacity: 0.9;
+}
+
+/* Style the gadget name */
+.gadget-details h3 {
+  color: #333;
+  font-size: 1.2rem;
+  margin-bottom: 0.3rem;
+}
+
+/* Improve hours input */
+.hours-input {
+  width: 90px;
+  padding: 0.5rem;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  background: white;
+  text-align: center;
+  color: #333;
+  font-size: 0.9rem;
+}
+
+.hours-input::placeholder {
+  color: #999;
+}
+
+/* Add label for hours */
+.hours-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.hours-label {
+  font-size: 0.8rem;
+  color: #666;
+  text-transform: uppercase;
+}
+
+/* Style the remove button */
+.remove-gadget {
+  background: none;
+  border: none;
+  color: #ff4444;
+  cursor: pointer;
+  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.remove-gadget:hover {
+  background: #ffebeb;
+}
+
+/* Add consumption info to selected items */
+.gadget-consumption {
+  color: #666;
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+}
+
+.selected-gadgets h2 {
+  margin-bottom: 2rem;
+  color: #333;
+}
+
+.no-gadgets {
+  text-align: center;
+  color: #666;
+  padding: 3rem 0;
+}
+
+/* Style the brand name */
+.gadget-brand {
+  color: #666;
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+}
+
+/* AI Predictions Section */
+.ai-predictions {
+  margin-top: 3rem;
+  padding: 2rem;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.ai-predictions h2 {
+  text-align: center;
+  color: #333;
+  margin-bottom: 2rem;
+  font-size: 1.8rem;
+}
+
+.predictions-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+}
+
+.prediction-card {
+  padding: 1.5rem;
+  background: #f8f8f8;
+  border-radius: 12px;
+  text-align: center;
+  transition: transform 0.2s ease;
+}
+
+.prediction-card:hover {
+  transform: translateY(-5px);
+}
+
+.prediction-icon {
+  font-size: 2rem;
+  color: #ff6b6b;
+  margin-bottom: 1rem;
+}
+
+.prediction-card h3 {
+  color: #333;
+  margin-bottom: 1rem;
+  font-size: 1.2rem;
+}
+
+.prediction-card p {
+  color: #666;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+@media (max-width: 768px) {
+  .predictions-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .prediction-card {
+    padding: 1.2rem;
+  }
+
+  .ai-predictions {
+    margin-top: 2rem;
+    padding: 1.5rem;
+  }
+}
+
+.prediction-card.loading {
+  position: relative;
+  overflow: hidden;
+}
+
+.prediction-card.loading::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg,
+      rgba(255, 255, 255, 0) 0%,
+      rgba(255, 255, 255, 0.5) 50%,
+      rgba(255, 255, 255, 0) 100%);
+  animation: loading-shimmer 1.5s infinite;
+}
+
+@keyframes loading-shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* Get Started Page Styles */
+.get-started {
+  min-height: 100vh;
+}
+
+.get-started-hero {
+  height: 40vh;
+  min-height: 300px;
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: white;
+}
+
+.get-started-header h1 {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.get-started-content {
+  max-width: 1200px;
+  margin: -100px auto 4rem;
+  padding: 0 2rem;
+}
+
+.contact-form {
+  background: white;
+  padding: 3rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group.full-width {
+  grid-column: 1 / -1;
+}
+
+.form-group label {
+  margin-bottom: 0.5rem;
+  color: #333;
+  font-weight: 500;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  padding: 0.8rem;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 1rem;
+  background-color: #fff;
+  color: #333;
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+  color: #999;
+}
+
+.form-group select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='6'%3E%3Cpath d='M0 0l6 6 6-6z' fill='%23666'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  padding-right: 2.5rem;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.checkbox-label input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  background-color: #fff;
+  border: 2px solid #ddd;
+  border-radius: 3px;
+}
+
+.submit-button {
+  background: #ff6b6b;
+  color: white;
+  border: none;
+  padding: 1rem 2rem;
+  border-radius: 6px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  width: 100%;
+  margin-top: 2rem;
+  transition: background-color 0.3s ease;
+}
+
+.submit-button:hover {
+  background: #ff5252;
+}
+
+@media (max-width: 768px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .get-started-content {
+    margin-top: -50px;
+    padding: 0 1rem;
+  }
+
+  .contact-form {
+    padding: 2rem;
+  }
+
+  .get-started-header h1 {
+    font-size: 2rem;
+  }
+}
+
+.form-group textarea {
+  padding: 0.8rem;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 1rem;
+  background-color: #fff;
+  color: #333;
+  resize: none;
+  /* Prevent manual resizing */
+  min-height: 120px;
+  /* Set minimum height */
+  max-height: 300px;
+  /* Set maximum height */
+  overflow-y: auto;
+  /* Add vertical scrollbar when needed */
+  line-height: 1.5;
+  /* Improve readability */
+}
+
+/* Style the scrollbar for better appearance */
+.form-group textarea::-webkit-scrollbar {
+  width: 8px;
+}
+
+.form-group textarea::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.form-group textarea::-webkit-scrollbar-thumb {
+  background: #ddd;
+  border-radius: 4px;
+}
+
+.form-group textarea::-webkit-scrollbar-thumb:hover {
+  background: #ccc;
 }

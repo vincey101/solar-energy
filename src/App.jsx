@@ -21,6 +21,9 @@ import ReviewSection from './components/home/ReviewSection'
 import { useEffect } from 'react'
 import Footer from './components/footer/Footer'
 import MobileMenu from './components/navigation/MobileMenu'
+import GadgetLibrary from './components/calculator/GadgetLibrary'
+import Calculator from './components/calculator/Calculator'
+import GetStarted from './components/contact/GetStarted'
 
 const navItems = [
   {
@@ -28,7 +31,7 @@ const navItems = [
     dropdownItems: [
       { title: 'Gadget Library', path: '/gadget-library' },
       { title: 'Calculator Tool', path: '/calculator' },
-      { title: 'Energy Consumption Assessment', path: '/assessment' },
+      // { title: 'Energy Consumption Assessment', path: '/assessment' },
     ],
   },
   {
@@ -111,19 +114,19 @@ function App() {
               <li key={index} className="nav-item">
                 <a href="#" className="nav-link">
                   {item.title}
-                  <svg 
-                    className="dropdown-icon" 
-                    width="10" 
-                    height="6" 
-                    viewBox="0 0 10 6" 
-                    fill="none" 
+                  <svg
+                    className="dropdown-icon"
+                    width="10"
+                    height="6"
+                    viewBox="0 0 10 6"
+                    fill="none"
                     xmlns="http://www.w3.org/2000/svg"
                   >
-                    <path 
-                      d="M1 1L5 5L9 1" 
-                      stroke="currentColor" 
-                      strokeWidth="2" 
-                      strokeLinecap="round" 
+                    <path
+                      d="M1 1L5 5L9 1"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
                       strokeLinejoin="round"
                     />
                   </svg>
@@ -167,6 +170,9 @@ function App() {
           <Route path="/ai/prediction" element={<EnergyPrediction />} />
           <Route path="/ai/optimization" element={<SystemOptimization />} />
           <Route path="/ai/credit" element={<CreditAssessment />} />
+          <Route path="/gadget-library" element={<GadgetLibrary />} />
+          <Route path="/calculator" element={<Calculator />} />
+          <Route path="/get-started" element={<GetStarted />} />
         </Routes>
         <Footer />
       </div>
