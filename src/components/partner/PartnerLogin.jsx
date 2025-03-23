@@ -1,13 +1,14 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { FaEnvelope, FaLock } from 'react-icons/fa'
+import { FaEnvelope, FaLock, FaBuilding, FaPhone } from 'react-icons/fa'
 import partnerHero from '../../assets/images/partner-logo.jpg'
 import '../../styles/partner.css'
 
 function PartnerLogin() {
     const [credentials, setCredentials] = useState({
         email: '',
-        password: ''
+        companyName: '',
+        phoneNumber: ''
     })
     const [error, setError] = useState('')
     const navigate = useNavigate()
@@ -80,14 +81,30 @@ function PartnerLogin() {
 
                     <div className="form-group">
                         <div className="input-group">
-                            <FaLock className="input-icon" />
+                            <FaBuilding className="input-icon" />
                             <input
-                                type="password"
-                                placeholder="Password"
-                                value={credentials.password}
+                                type="text"
+                                placeholder="Company Name"
+                                value={credentials.companyName}
                                 onChange={(e) => setCredentials({
                                     ...credentials,
-                                    password: e.target.value
+                                    companyName: e.target.value
+                                })}
+                                required
+                            />
+                        </div>
+                    </div>
+
+                    <div className="form-group">
+                        <div className="input-group">
+                            <FaPhone className="input-icon" />
+                            <input
+                                type="tel"
+                                placeholder="Phone Number"
+                                value={credentials.phoneNumber}
+                                onChange={(e) => setCredentials({
+                                    ...credentials,
+                                    phoneNumber: e.target.value
                                 })}
                                 required
                             />
