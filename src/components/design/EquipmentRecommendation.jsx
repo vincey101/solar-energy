@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { FaStar, FaShieldAlt, FaDollarSign, FaCheck } from 'react-icons/fa'
 import equipmentHero from '../../assets/images/equipment.jpg'
+import { africanCurrencyService } from '../../services/africanCurrencyService'
 
 // Equipment database
 const solarPanels = [
@@ -11,7 +12,7 @@ const solarPanels = [
         wattage: 425,
         efficiency: 22.8,
         warranty: 25,
-        price: 850,
+        price: 350000,
         features: [
             'Industry-leading efficiency',
             'Maxeon Gen 7 cells',
@@ -89,7 +90,7 @@ const batteries = [
         capacity: 13.5,
         power: 9.6,
         warranty: 10,
-        price: 11500,
+        price: 4500000,
         features: [
             'Integrated inverter & backup gateway',
             'Storm Watch weather monitoring',
@@ -252,6 +253,11 @@ const installationCosts = {
     }
 }
 
+// Add price formatting function
+const formatPrice = (priceInNaira) => {
+    return africanCurrencyService.convertPrice(priceInNaira).formatted;
+}
+
 function EquipmentRecommendation() {
     const [systemSize, setSystemSize] = useState({
         panelCount: 0,
@@ -286,6 +292,14 @@ function EquipmentRecommendation() {
         },
         totalCost: 0
     })
+
+    const [userLocation, setUserLocation] = useState(null)
+    const [customKWh, setCustomKWh] = useState('')
+    const [selectedSize, setSelectedSize] = useState('5')
+    const [priceEstimate, setPriceEstimate] = useState(null)
+    const [loadInputs, setLoadInputs] = useState([])
+    const [showLoadCalculator, setShowLoadCalculator] = useState(false)
+    const [selectedCountry, setSelectedCountry] = useState('NGN')
 
     useEffect(() => {
         // Get system design data from localStorage
@@ -378,6 +392,59 @@ function EquipmentRecommendation() {
         calculateCosts()
     }, [recommendations, systemSize])
 
+    useEffect(() => {
+        async function detectLocation() {
+            const location = await africanCurrencyService.detectUserLocation()
+            setUserLocation(location)
+            updatePriceEstimate(selectedSize)
+        }
+        detectLocation()
+    }, [])
+
+    const updatePriceEstimate = (kWh) => {
+        const estimate = africanCurrencyService.calculatePrice(Number(kWh))
+        setPriceEstimate(estimate)
+    }
+
+    const handleSizeChange = (e) => {
+        const size = e.target.value
+        setSelectedSize(size)
+        updatePriceEstimate(size)
+    }
+
+    const handleCustomKWhChange = (e) => {
+        const value = e.target.value
+        setCustomKWh(value)
+        if (value) {
+            updatePriceEstimate(Number(value))
+        }
+    }
+
+    const handleLoadChange = (index, field, value) => {
+        const newLoadInputs = [...loadInputs]
+        newLoadInputs[index][field] = value
+        setLoadInputs(newLoadInputs)
+
+        // Calculate total kWh and update price
+        const totalKWh = calculateTotalLoad()
+        if (totalKWh >= 0) {
+            setCustomKWh(totalKWh.toString())
+            updatePriceEstimate(totalKWh)
+        }
+    }
+
+    const addLoadInput = () => {
+        setLoadInputs([...loadInputs, { name: '', watts: '' }]) // Remove hours field
+    }
+
+    const calculateTotalLoad = () => {
+        const totalKWh = loadInputs.reduce((total, load) => {
+            const kwh = parseFloat(load.watts) || 0
+            return total + kwh
+        }, 0)
+        return +totalKWh.toFixed(1) // Round to 1 decimal place
+    }
+
     return (
         <div className="equipment-recommendation">
             <div
@@ -419,14 +486,6 @@ function EquipmentRecommendation() {
                                         <span>Efficiency</span>
                                         <strong>{panel.efficiency}%</strong>
                                     </div>
-                                    <div className="spec-item">
-                                        <FaShieldAlt />
-                                        <span>{panel.warranty} Year Warranty</span>
-                                    </div>
-                                    <div className="spec-item">
-                                        <FaDollarSign />
-                                        <span>${panel.price}/panel</span>
-                                    </div>
                                 </div>
                                 <div className="features-list">
                                     {panel.features.map((feature, index) => (
@@ -465,14 +524,6 @@ function EquipmentRecommendation() {
                                     <div className="spec-item">
                                         <span>Power</span>
                                         <strong>{battery.power} kW</strong>
-                                    </div>
-                                    <div className="spec-item">
-                                        <FaShieldAlt />
-                                        <span>{battery.warranty} Year Warranty</span>
-                                    </div>
-                                    <div className="spec-item">
-                                        <FaDollarSign />
-                                        <span>${battery.price}</span>
                                     </div>
                                 </div>
                                 <div className="features-list">
@@ -513,14 +564,6 @@ function EquipmentRecommendation() {
                                         <span>Efficiency</span>
                                         <strong>{inverter.efficiency}%</strong>
                                     </div>
-                                    <div className="spec-item">
-                                        <FaShieldAlt />
-                                        <span>{inverter.warranty} Year Warranty</span>
-                                    </div>
-                                    <div className="spec-item">
-                                        <FaDollarSign />
-                                        <span>${inverter.price}</span>
-                                    </div>
                                 </div>
                                 <div className="features-list">
                                     {inverter.features.map((feature, index) => (
@@ -534,81 +577,162 @@ function EquipmentRecommendation() {
                     </div>
                 </div>
 
-                <div className="equipment-section cost-estimation">
+                <div className="system-size-selector">
                     <h2>System Cost Estimation</h2>
-                    <div className="cost-breakdown">
-                        <div className="cost-section">
-                            <h3>Equipment Costs</h3>
-                            <div className="cost-grid">
-                                <div className="cost-item">
-                                    <span>Solar Panels ({systemSize.panelCount} units)</span>
-                                    <strong>${costBreakdown.equipment.panels.toLocaleString()}</strong>
-                                </div>
-                                <div className="cost-item">
-                                    <span>Battery Storage</span>
-                                    <strong>${costBreakdown.equipment.battery.toLocaleString()}</strong>
-                                </div>
-                                <div className="cost-item">
-                                    <span>Inverter</span>
-                                    <strong>${costBreakdown.equipment.inverter.toLocaleString()}</strong>
-                                </div>
-                                <div className="cost-item total">
-                                    <span>Equipment Total</span>
-                                    <strong>${costBreakdown.equipment.total.toLocaleString()}</strong>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="cost-section">
-                            <h3>Installation Costs</h3>
-                            <div className="cost-grid">
-                                <div className="cost-item">
-                                    <span>Labor</span>
-                                    <strong>${costBreakdown.installation.labor.toLocaleString()}</strong>
-                                </div>
-                                <div className="cost-item">
-                                    <span>Mounting Hardware</span>
-                                    <strong>${costBreakdown.installation.mounting.toLocaleString()}</strong>
-                                </div>
-                                <div className="cost-item">
-                                    <span>Electrical Work</span>
-                                    <strong>${costBreakdown.installation.electrical.toLocaleString()}</strong>
-                                </div>
-                                <div className="cost-item">
-                                    <span>Permits & Inspection</span>
-                                    <strong>${(costBreakdown.installation.permits + costBreakdown.installation.inspection).toLocaleString()}</strong>
-                                </div>
-                                <div className="cost-item total">
-                                    <span>Installation Total</span>
-                                    <strong>${costBreakdown.installation.total.toLocaleString()}</strong>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="cost-section">
-                            <h3>Maintenance Costs</h3>
-                            <div className="cost-grid">
-                                <div className="cost-item">
-                                    <span>Annual Maintenance</span>
-                                    <strong>${costBreakdown.maintenance.annual.toLocaleString()}/year</strong>
-                                </div>
-                                <div className="cost-item">
-                                    <span>10-Year Maintenance Estimate</span>
-                                    <strong>${costBreakdown.maintenance.tenYear.toLocaleString()}</strong>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="total-cost">
-                            <h3>Total System Cost</h3>
-                            <div className="cost-amount">
-                                ${costBreakdown.totalCost.toLocaleString()}
-                            </div>
-                            <p className="cost-note">
-                                * Prices include standard installation. Actual costs may vary based on site conditions and local requirements.
-                            </p>
-                        </div>
+                    <p>Get an instant estimate based on your power needs by selecting custom system</p>
+                    <div className="size-options">
+                        <select value={selectedSize} onChange={handleSizeChange}>
+                            <option value="3">3 kWh System</option>
+                            <option value="5">5 kWh System</option>
+                            <option value="10">10 kWh System</option>
+                            <option value="15">15 kWh System</option>
+                            <option value="20">20 kWh System</option>
+                            <option value="custom">Custom system</option>
+                        </select>
                     </div>
+
+                    {selectedSize === 'custom' && (
+                        <div className="load-calculator">
+                            <h3>Calculate Your Power Needs</h3>
+                            <div className="load-inputs">
+                                {loadInputs.map((load, index) => (
+                                    <div key={index} className="load-input">
+                                        <input
+                                            type="text"
+                                            placeholder="Appliance name"
+                                            value={load.name}
+                                            onChange={(e) => handleLoadChange(index, 'name', e.target.value)}
+                                        />
+                                        <input
+                                            type="number"
+                                            placeholder="kWh"
+                                            value={load.watts}
+                                            onChange={(e) => handleLoadChange(index, 'watts', e.target.value)}
+                                            step="0.1"
+                                            min="0"
+                                        />
+                                    </div>
+                                ))}
+                                <button onClick={addLoadInput} className="add-appliance-btn">
+                                    Add Appliance
+                                </button>
+                            </div>
+                            <div className="total-load">
+                                Total System Size: {calculateTotalLoad()} kWh
+                            </div>
+                        </div>
+                    )}
+
+                    <div className="country-selector">
+                        <label>Select Your Country</label>
+                        <select
+                            value={selectedCountry}
+                            onChange={(e) => {
+                                setSelectedCountry(e.target.value)
+                                africanCurrencyService.setCurrency(e.target.value)
+                                // Update price estimate for both fixed and custom sizes
+                                if (selectedSize === 'custom') {
+                                    updatePriceEstimate(calculateTotalLoad())
+                                } else {
+                                    updatePriceEstimate(selectedSize)
+                                }
+                            }}
+                        >
+                            {/* West Africa */}
+                            <optgroup label="West Africa">
+                                <option value="NGN">Nigeria</option>
+                                <option value="GHS">Ghana</option>
+                                <option value="XOF">Benin</option>
+                                <option value="XOF">Burkina Faso</option>
+                                <option value="XOF">Côte d'Ivoire</option>
+                                <option value="GMD">Gambia</option>
+                                <option value="GNF">Guinea</option>
+                                <option value="XOF">Guinea-Bissau</option>
+                                <option value="LRD">Liberia</option>
+                                <option value="XOF">Mali</option>
+                                <option value="XOF">Niger</option>
+                                <option value="XOF">Senegal</option>
+                                <option value="SLL">Sierra Leone</option>
+                                <option value="XOF">Togo</option>
+                            </optgroup>
+
+                            {/* East Africa */}
+                            <optgroup label="East Africa">
+                                <option value="KES">Kenya</option>
+                                <option value="TZS">Tanzania</option>
+                                <option value="UGX">Uganda</option>
+                                <option value="RWF">Rwanda</option>
+                                <option value="BIF">Burundi</option>
+                                <option value="ETB">Ethiopia</option>
+                                <option value="SOS">Somalia</option>
+                                <option value="DJF">Djibouti</option>
+                                <option value="ERN">Eritrea</option>
+                                <option value="SSP">South Sudan</option>
+                            </optgroup>
+
+                            {/* North Africa */}
+                            <optgroup label="North Africa">
+                                <option value="EGP">Egypt</option>
+                                <option value="SDG">Sudan</option>
+                                <option value="LYD">Libya</option>
+                                <option value="TND">Tunisia</option>
+                                <option value="DZD">Algeria</option>
+                                <option value="MAD">Morocco</option>
+                            </optgroup>
+
+                            {/* Southern Africa */}
+                            <optgroup label="Southern Africa">
+                                <option value="ZAR">South Africa</option>
+                                <option value="ZMW">Zambia</option>
+                                <option value="BWP">Botswana</option>
+                                <option value="NAD">Namibia</option>
+                                <option value="LSL">Lesotho</option>
+                                <option value="SZL">Eswatini</option>
+                                <option value="MZN">Mozambique</option>
+                                <option value="MGA">Madagascar</option>
+                                <option value="ZWL">Zimbabwe</option>
+                            </optgroup>
+
+                            {/* Central Africa */}
+                            <optgroup label="Central Africa">
+                                <option value="XAF">Cameroon</option>
+                                <option value="XAF">Central African Republic</option>
+                                <option value="XAF">Chad</option>
+                                <option value="XAF">Republic of Congo</option>
+                                <option value="CDF">DR Congo</option>
+                                <option value="XAF">Equatorial Guinea</option>
+                                <option value="XAF">Gabon</option>
+                                <option value="AOA">Angola</option>
+                            </optgroup>
+
+                            {/* Island Nations */}
+                            <optgroup label="Island Nations">
+                                <option value="MUR">Mauritius</option>
+                                <option value="SCR">Seychelles</option>
+                                <option value="KMF">Comoros</option>
+                                <option value="CVE">Cape Verde</option>
+                                <option value="STN">São Tomé and Príncipe</option>
+                            </optgroup>
+                        </select>
+                    </div>
+
+                    {priceEstimate && (
+                        <div className="price-estimate">
+                            <h3>Estimated System Cost</h3>
+                            <div className="price-amount">
+                                {priceEstimate.formattedPrice}
+                            </div>
+                            <div className="price-note">
+                                <p>
+                                    * This is an estimated price for a {selectedSize === 'custom' ? calculateTotalLoad() : selectedSize}kWh system
+                                    in {africanCurrencyService.getCountryName(selectedCountry)}.
+                                </p>
+                                <p>
+                                    Actual costs may vary based on specific requirements and location.
+                                </p>
+                            </div>
+                        </div>
+                    )}
                 </div>
             </div>
         </div>

@@ -14,7 +14,9 @@ function Calculator() {
     monthlyTrend: 'Calculating consumption trends...',
     optimization: 'Evaluating efficiency...'
   })
-  const [isModelReady, setIsModelReady] = useState(false)
+  const [customGadget, setCustomGadget] = useState('')
+  const [isSearching, setIsSearching] = useState(false)
+  const [searchResults, setSearchResults] = useState(null)
 
   const addGadget = (gadget) => {
     setSelectedGadgets([
@@ -79,14 +81,8 @@ function Calculator() {
     async function initializeAI() {
       try {
         await energyAI.initialize()
-        setIsModelReady(true)
       } catch (error) {
         console.error('Failed to initialize AI model:', error)
-        setPredictions({
-          peakHours: 'Unable to analyze at this time',
-          monthlyTrend: 'Unable to analyze at this time',
-          optimization: 'Unable to analyze at this time'
-        })
       }
     }
     initializeAI()
@@ -94,16 +90,19 @@ function Calculator() {
 
   useEffect(() => {
     async function updatePredictions() {
-      if (isModelReady && selectedGadgets.length > 0) {
+      if (selectedGadgets.length > 0) {
         try {
-          const aiPredictions = await energyAI.predict(selectedGadgets)
-          if (aiPredictions) {
-            setPredictions(aiPredictions)
-          }
+          const predictions = await energyAI.predict(selectedGadgets)
+          setPredictions(predictions)
         } catch (error) {
-          console.error('Prediction failed:', error)
+          console.error('Failed to update predictions:', error)
+          setPredictions({
+            peakHours: 'Unable to analyze at this time',
+            monthlyTrend: 'Unable to analyze at this time',
+            optimization: 'Unable to analyze at this time'
+          })
         }
-      } else if (selectedGadgets.length === 0) {
+      } else {
         setPredictions({
           peakHours: 'Add gadgets to see usage analysis',
           monthlyTrend: 'Add gadgets to see consumption trends',
@@ -112,7 +111,41 @@ function Calculator() {
       }
     }
     updatePredictions()
-  }, [selectedGadgets, isModelReady])
+  }, [selectedGadgets])
+
+  const handleCustomGadgetSearch = async (e) => {
+    e.preventDefault()
+    if (!customGadget.trim()) return
+
+    setIsSearching(true)
+    try {
+      const result = await energyAI.searchGadget(customGadget)
+      if (result) {
+        setSearchResults(result)
+        const newGadget = {
+          id: `custom-${Date.now()}`,
+          name: result.name,
+          powerRating: result.estimatedWattage / 1000, // Convert to kW
+          avgDailyUsage: result.suggestedHours,
+          category: result.type,
+          efficiency: result.confidence > 0.8 ? 'A+' : 'B',
+          brand: 'Generic',
+          model: 'Custom'
+        }
+        addGadget(newGadget)
+
+        // Clear search results after a short delay
+        setTimeout(() => {
+          setSearchResults(null)
+        }, 2000) // Clear after 2 seconds
+      }
+    } catch (error) {
+      console.error('Search failed:', error)
+    } finally {
+      setIsSearching(false)
+      setCustomGadget('')
+    }
+  }
 
   return (
     <div className="calculator">
@@ -149,6 +182,28 @@ function Calculator() {
                 </option>
               ))}
             </select>
+          </div>
+
+          <div className="custom-gadget-search">
+            <form onSubmit={handleCustomGadgetSearch}>
+              <input
+                type="text"
+                value={customGadget}
+                onChange={(e) => setCustomGadget(e.target.value)}
+                placeholder="AI Search for any gadget..."
+                className="custom-gadget-input"
+              />
+              <button type="submit" disabled={isSearching}>
+                {isSearching ? 'Searching...' : 'Add Gadget'}
+              </button>
+            </form>
+            {searchResults && (
+              <div className="search-results">
+                <p>Found: {searchResults.name}</p>
+                <p>Estimated Power: {searchResults.estimatedWattage}W</p>
+                <p>Confidence: {(searchResults.confidence * 100).toFixed(1)}%</p>
+              </div>
+            )}
           </div>
 
           <div className="selected-gadgets">
@@ -214,17 +269,17 @@ function Calculator() {
           <div className="ai-predictions">
             <h2>AI Energy Insights</h2>
             <div className="predictions-grid">
-              <div className={`prediction-card ${!isModelReady ? 'loading' : ''}`}>
+              <div className={`prediction-card`}>
                 <FaClock className="prediction-icon" />
                 <h3>Peak Usage Hours</h3>
                 <p>{predictions.peakHours}</p>
               </div>
-              <div className={`prediction-card ${!isModelReady ? 'loading' : ''}`}>
+              <div className={`prediction-card`}>
                 <FaChartLine className="prediction-icon" />
                 <h3>Monthly Trend</h3>
                 <p>{predictions.monthlyTrend}</p>
               </div>
-              <div className={`prediction-card ${!isModelReady ? 'loading' : ''}`}>
+              <div className={`prediction-card`}>
                 <FaLightbulb className="prediction-icon" />
                 <h3>Optimization Tips</h3>
                 <p>{predictions.optimization}</p>

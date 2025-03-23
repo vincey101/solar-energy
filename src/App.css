@@ -2282,9 +2282,9 @@
 
 .cost-amount {
   font-size: 2.5rem;
-  font-weight: 700;
+  font-weight: bold;
   color: #ff6b6b;
-  margin-bottom: 1rem;
+  margin: 1rem 0;
 }
 
 .cost-note {
@@ -2300,4 +2300,321 @@
   .cost-amount {
     font-size: 2rem;
   }
+}
+
+/* Registration type selector styles */
+.registration-type-selector {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  justify-content: center;
+}
+
+.type-button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem 2rem;
+  border: 2px solid #333;
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.8);
+  /* Dark background */
+  color: white;
+  /* White text */
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 1.1rem;
+  min-width: 250px;
+  justify-content: center;
+}
+
+.type-button svg {
+  font-size: 1.2rem;
+}
+
+.type-button.active {
+  border-color: #ff6b6b;
+  background: #ff6b6b;
+  color: white;
+}
+
+.type-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .registration-type-selector {
+    flex-direction: column;
+    padding: 0 1rem;
+  }
+
+  .type-button {
+    width: 100%;
+    min-width: unset;
+  }
+}
+
+@media (max-width: 480px) {
+  .type-button {
+    padding: 0.8rem 1.5rem;
+    font-size: 0.9rem;
+  }
+}
+
+.custom-gadget-search {
+  margin: 1rem 0;
+  padding: 1.5rem;
+  background: #1a1a1a;
+  border-radius: 12px;
+  color: white;
+}
+
+.custom-gadget-search form {
+  display: flex;
+  gap: 1rem;
+}
+
+.custom-gadget-input {
+  flex: 1;
+  padding: 1rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  background: #333;
+  color: white;
+}
+
+.custom-gadget-input::placeholder {
+  color: #888;
+}
+
+.custom-gadget-search button {
+  padding: 0 2rem;
+  border: none;
+  border-radius: 8px;
+  background: #ff6b6b;
+  color: white;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.custom-gadget-search button:hover {
+  background: #ff5252;
+  transform: translateY(-2px);
+}
+
+.custom-gadget-search button:disabled {
+  background: #666;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.search-results {
+  margin-top: 1rem;
+  padding: 1rem;
+  background: #333;
+  border-radius: 8px;
+}
+
+.search-results p {
+  margin: 0.5rem 0;
+  color: #fff;
+}
+
+.system-size-selector {
+  background: #ffffff;
+  padding: 2rem;
+  border-radius: 12px;
+  margin: 2rem 0;
+  color: #333;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.size-options {
+  display: flex;
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+.size-options select {
+  padding: 0.8rem;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  background: white;
+  color: #333;
+  font-size: 1rem;
+  min-width: 200px;
+}
+
+.custom-size-input {
+  display: none;
+  /* Hide the manual kWh input */
+}
+
+.custom-size-input input {
+  padding: 0.8rem;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  background: white;
+  color: #333;
+  width: 150px;
+}
+
+.custom-size-input button {
+  padding: 0.8rem 1.5rem;
+  border-radius: 8px;
+  border: none;
+  background: #ff6b6b;
+  color: white;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.custom-size-input button:hover {
+  background: #ff5252;
+  transform: translateY(-2px);
+}
+
+.price-estimate {
+  margin-top: 2rem;
+  text-align: center;
+  padding: 2rem;
+  background: #f8f9fa;
+  border-radius: 12px;
+}
+
+.price-amount {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #ff6b6b;
+  margin: 1rem 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.price-amount .currency-symbol {
+  font-size: 1.8rem;
+  opacity: 0.8;
+}
+
+.price-note {
+  color: #666;
+  font-size: 0.9rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.exchange-rate-info {
+  font-size: 0.8rem;
+  color: #888;
+  margin-top: 0.5rem;
+}
+
+.load-calculator {
+  margin-top: 2rem;
+  padding: 1.5rem;
+  background: white;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+}
+
+.load-inputs {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin: 1rem 0;
+}
+
+.load-input {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 1rem;
+  align-items: center;
+}
+
+.load-input input {
+  padding: 0.8rem;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  background: white;
+  color: #333;
+  width: 100%;
+}
+
+.load-input input[type="number"] {
+  text-align: right;
+  -moz-appearance: textfield;
+  /* Firefox */
+}
+
+/* Remove spinner buttons */
+.load-input input[type="number"]::-webkit-inner-spin-button,
+.load-input input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.add-appliance-btn {
+  padding: 0.8rem 1.5rem;
+  border-radius: 8px;
+  border: none;
+  background: #ff6b6b;
+  color: white;
+  cursor: pointer;
+  margin-top: 1rem;
+  width: fit-content;
+  align-self: flex-start;
+}
+
+.add-appliance-btn:hover {
+  background: #ff5252;
+  transform: translateY(-2px);
+}
+
+.total-load {
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid #ddd;
+  font-weight: 500;
+  color: #333;
+  font-size: 1.1rem;
+}
+
+/* Update existing styles */
+.custom-size-input {
+  display: none;
+  /* Hide the manual kWh input */
+}
+
+.country-selector {
+  margin: 1rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.country-selector label {
+  font-weight: 500;
+  color: #666;
+}
+
+.country-selector select {
+  padding: 0.8rem;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  background: white;
+  color: #333;
+  font-size: 1rem;
+  min-width: 200px;
+  cursor: pointer;
+}
+
+.country-selector select:hover {
+  border-color: #ff6b6b;
 }

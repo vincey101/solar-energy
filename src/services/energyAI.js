@@ -1,238 +1,418 @@
 import * as tf from '@tensorflow/tfjs'
 
-class EnergyAI {
+class EnergyAIService {
   constructor() {
     this.model = null
-    this.trained = false
+    this.isInitialized = false
+    this.gadgetFeatures = ['wattage', 'hours', 'type', 'efficiency']
+    this.gadgetDatabase = {
+      // Kitchen Appliances
+      'refrigerator': { type: 'appliance', baseWattage: 150, efficiencyFactor: 0.9, hours: 24, variations: {
+        'mini': 80,
+        'side by side': 180,
+        'french door': 200
+      }},
+      'freezer': { type: 'appliance', baseWattage: 200, efficiencyFactor: 0.85, hours: 24 },
+      'microwave': { type: 'appliance', baseWattage: 1000, efficiencyFactor: 0.9, hours: 0.5, variations: {
+        'small': 600,
+        'large': 1200
+      }},
+      'electric stove': { type: 'appliance', baseWattage: 2000, efficiencyFactor: 0.8, hours: 1 },
+      'oven': { type: 'appliance', baseWattage: 2400, efficiencyFactor: 0.8, hours: 1 },
+      'dishwasher': { type: 'appliance', baseWattage: 1200, efficiencyFactor: 0.95, hours: 1 },
+      'coffee maker': { type: 'appliance', baseWattage: 900, efficiencyFactor: 0.9, hours: 0.5 },
+      'toaster': { type: 'appliance', baseWattage: 850, efficiencyFactor: 0.95, hours: 0.2 },
+      'kettle': { type: 'appliance', baseWattage: 1500, efficiencyFactor: 0.9, hours: 0.25 },
+      
+      // Entertainment & Office
+      'tv': { type: 'electronics', baseWattage: 100, efficiencyFactor: 0.95, hours: 4, variations: {
+        'led': 60,
+        'lcd': 100,
+        'plasma': 300,
+        'oled': 80,
+        '32 inch': 50,
+        '43 inch': 70,
+        '55 inch': 100,
+        '65 inch': 120,
+        '75 inch': 150
+      }},
+      'laptop': { type: 'electronics', baseWattage: 50, efficiencyFactor: 0.9, hours: 6, variations: {
+        'gaming': 180,
+        'ultrabook': 35,
+        'macbook': 30,
+        'chromebook': 25
+      }},
+      'desktop computer': { type: 'electronics', baseWattage: 200, efficiencyFactor: 0.85, hours: 8, variations: {
+        'gaming': 500,
+        'office': 150,
+        'workstation': 300
+      }},
+      'gaming console': { type: 'electronics', baseWattage: 150, efficiencyFactor: 0.9, hours: 3, variations: {
+        'ps5': 200,
+        'xbox series x': 180,
+        'nintendo switch': 18
+      }},
+      'monitor': { type: 'electronics', baseWattage: 30, efficiencyFactor: 0.95, hours: 8, variations: {
+        '24 inch': 25,
+        '27 inch': 35,
+        '32 inch': 45,
+        'ultrawide': 50
+      }},
+      
+      // Laundry
+      'washing machine': { type: 'appliance', baseWattage: 500, efficiencyFactor: 0.9, hours: 1, variations: {
+        'front load': 400,
+        'top load': 550,
+        'commercial': 800
+      }},
+      'dryer': { type: 'appliance', baseWattage: 3000, efficiencyFactor: 0.8, hours: 1 },
+      'iron': { type: 'appliance', baseWattage: 1200, efficiencyFactor: 0.95, hours: 0.5 },
+      
+      // Climate Control
+      'air conditioner': { type: 'hvac', baseWattage: 1500, efficiencyFactor: 0.85, hours: 8, variations: {
+        'window': 1000,
+        'split': 1500,
+        'portable': 1200,
+        '9000 btu': 900,
+        '12000 btu': 1200,
+        '18000 btu': 1800,
+        '24000 btu': 2400
+      }},
+      'fan': { type: 'hvac', baseWattage: 60, efficiencyFactor: 0.95, hours: 8, variations: {
+        'ceiling': 75,
+        'table': 40,
+        'pedestal': 50,
+        'industrial': 200
+      }},
+      'heater': { type: 'hvac', baseWattage: 1500, efficiencyFactor: 0.9, hours: 4, variations: {
+        'space heater': 1500,
+        'infrared': 1200,
+        'oil filled': 800,
+        'ceramic': 1000
+      }},
+      
+      // Small Electronics
+      'phone charger': { type: 'electronics', baseWattage: 5, efficiencyFactor: 0.9, hours: 8 },
+      'wifi router': { type: 'electronics', baseWattage: 7, efficiencyFactor: 0.95, hours: 24 },
+      'modem': { type: 'electronics', baseWattage: 10, efficiencyFactor: 0.95, hours: 24 },
+      
+      // Audio Equipment
+      'speaker': { type: 'electronics', baseWattage: 20, efficiencyFactor: 0.9, hours: 3, variations: {
+        'bluetooth': 10,
+        'soundbar': 30,
+        'home theater': 100,
+        'subwoofer': 50
+      }},
+      'radio': { type: 'electronics', baseWattage: 15, efficiencyFactor: 0.9, hours: 4 },
+      
+      // Kitchen Small Appliances
+      'blender': { type: 'appliance', baseWattage: 300, efficiencyFactor: 0.9, hours: 0.2 },
+      'food processor': { type: 'appliance', baseWattage: 400, efficiencyFactor: 0.9, hours: 0.3 },
+      'mixer': { type: 'appliance', baseWattage: 250, efficiencyFactor: 0.9, hours: 0.3 }
+    }
   }
 
   async initialize() {
     try {
-      // Create and compile model
-      const model = tf.sequential()
-      
-      model.add(tf.layers.dense({
-        units: 16,
-        inputShape: [4],
-        activation: 'relu'
-      }))
-      
-      model.add(tf.layers.dense({
-        units: 8,
-        activation: 'relu'
-      }))
-      
-      model.add(tf.layers.dense({
-        units: 3,
-        activation: 'sigmoid'
-      }))
-
-      model.compile({
-        optimizer: 'adam',
-        loss: 'binaryCrossentropy'
-      })
-
-      this.model = model
-      
-      // Train immediately after initialization
-      await this.trainModel()
-      
-      this.trained = true
-      console.log('AI Model initialized and trained successfully')
+      // Simple initialization to get started
+      this.isInitialized = true
+      console.log('AI Service initialized')
       return true
     } catch (error) {
-      console.error('Failed to initialize AI model:', error)
+      console.error('Failed to initialize AI:', error)
       return false
     }
   }
 
-  async trainModel() {
-    // Simple training data
-    const xs = tf.tensor2d([
-      [0.2, 0.3, 0.1, 0.8], // Low power, morning usage, efficient
-      [0.8, 0.7, 0.5, 0.3], // High power, evening usage, less efficient
-      [0.5, 0.5, 0.2, 0.6], // Medium power, mixed usage, moderately efficient
-      [0.9, 0.8, 0.7, 0.2], // Very high power, evening usage, inefficient
-      [0.3, 0.2, 0.1, 0.9], // Low power, morning usage, very efficient
-    ])
-
-    const ys = tf.tensor2d([
-      [1, 0, 1], // Day peak, low consumption, efficient
-      [0, 1, 0], // Night peak, high consumption, inefficient
-      [1, 0.5, 0.5], // Mixed peak, medium consumption, moderate
-      [0, 1, 0], // Night peak, very high consumption, inefficient
-      [1, 0, 1], // Day peak, low consumption, efficient
-    ])
-
-    await this.model.fit(xs, ys, {
-      epochs: 50,
-      batchSize: 1
-    })
-
-    // Clean up tensors
-    xs.dispose()
-    ys.dispose()
-  }
-
-  async predict(gadgets) {
-    if (!this.model || !this.trained || gadgets.length === 0) {
-      console.log('Model not ready or no gadgets')
-      return null
+  async predictEnergyConsumption(gadgetInfo) {
+    if (!this.isInitialized) {
+      throw new Error('AI model not initialized')
     }
 
     try {
-      // Prepare input data
-      const inputData = gadgets.map(g => [
-        g.powerRating / 5.0, // Normalize power
-        g.customHours / 24.0, // Normalize hours
-        g.quantity / 10.0, // Normalize quantity
-        this.getEfficiencyScore(g.energyEfficiency)
-      ])
+      // Normalize input data
+      const input = tf.tensor2d([[
+        this.normalizeWattage(gadgetInfo.wattage),
+        this.normalizeHours(gadgetInfo.hours),
+        this.encodeType(gadgetInfo.type),
+        this.normalizeEfficiency(gadgetInfo.efficiency)
+      ]])
 
-      // Make prediction using tf.tidy for memory management
-      const prediction = await tf.tidy(() => {
-        const input = tf.tensor2d(inputData)
-        const avgInput = input.mean(0).expandDims(0)
-        return this.model.predict(avgInput).dataSync()
-      })
+      // Make prediction
+      const prediction = await this.model.predict(input).data()
+      return this.denormalizeConsumption(prediction[0])
+    } catch (error) {
+      console.error('Prediction failed:', error)
+      throw error
+    }
+  }
 
-      // Calculate some basic metrics
-      const totalDailyUsage = gadgets.reduce((sum, g) => 
-        sum + (g.powerRating * g.quantity * g.customHours), 0
-      )
+  // Helper methods for data normalization
+  normalizeWattage(wattage) {
+    return wattage / 3000 // Assuming max wattage is 3000W
+  }
 
-      // Generate insights based on predictions
+  normalizeHours(hours) {
+    return hours / 24
+  }
+
+  encodeType(type) {
+    const types = ['appliance', 'electronics', 'lighting', 'hvac']
+    return types.indexOf(type.toLowerCase()) / types.length
+  }
+
+  normalizeEfficiency(efficiency) {
+    const ratings = ['A+++', 'A++', 'A+', 'A', 'B', 'C', 'D']
+    return (ratings.length - ratings.indexOf(efficiency)) / ratings.length
+  }
+
+  denormalizeConsumption(value) {
+    return value * 100 // Scale back to kWh
+  }
+
+  // Method to handle custom gadget queries
+  async searchGadget(query) {
+    query = query.toLowerCase()
+    
+    // Check for variations first
+    for (const [gadgetName, info] of Object.entries(this.gadgetDatabase)) {
+      if (info.variations) {
+        for (const [variant, wattage] of Object.entries(info.variations)) {
+          if (query.includes(variant)) {
+            return {
+              name: `${variant} ${gadgetName}`,
+              type: info.type,
+              estimatedWattage: wattage,
+              suggestedHours: info.hours,
+              confidence: 0.95
+            }
+          }
+        }
+      }
+    }
+    
+    // Direct match
+    if (this.gadgetDatabase[query]) {
+      const info = this.gadgetDatabase[query]
       return {
-        peakHours: this.getPeakHoursMessage(prediction[0], gadgets),
-        monthlyTrend: this.getMonthlyTrendMessage(prediction[1], totalDailyUsage),
-        optimization: this.getOptimizationMessage(prediction[2], gadgets)
+        name: query,
+        type: info.type,
+        estimatedWattage: info.baseWattage,
+        suggestedHours: info.hours,
+        confidence: 0.95
+      }
+    }
+
+    // Partial match
+    const matches = Object.entries(this.gadgetDatabase)
+      .filter(([key]) => key.includes(query) || query.includes(key))
+      .map(([key, info]) => ({
+        name: key,
+        type: info.type,
+        estimatedWattage: info.baseWattage,
+        suggestedHours: info.hours,
+        confidence: 0.8
+      }))
+
+    if (matches.length > 0) {
+      return matches[0]
+    }
+
+    // Fallback with more intelligent estimation
+    return this.estimateUnknownGadget(query)
+  }
+
+  estimateUnknownGadget(query) {
+    const words = query.toLowerCase().split(' ')
+    let baseEstimate = 100 // Default wattage
+    let confidence = 0.4
+
+    const powerKeywords = {
+      'small': 0.5,
+      'mini': 0.3,
+      'portable': 0.7,
+      'large': 1.5,
+      'heavy': 2,
+      'industrial': 3,
+      'commercial': 2.5,
+      'professional': 2
+    }
+
+    const categoryEstimates = {
+      'heater': 1500,
+      'cooker': 1200,
+      'fan': 60,
+      'light': 10,
+      'charger': 20,
+      'pump': 400,
+      'motor': 500
+    }
+
+    // Check for category-based estimates
+    for (const [category, estimate] of Object.entries(categoryEstimates)) {
+      if (query.includes(category)) {
+        baseEstimate = estimate
+        confidence = 0.6
+        break
+      }
+    }
+
+    // Apply modifiers
+    words.forEach(word => {
+      if (powerKeywords[word]) {
+        baseEstimate *= powerKeywords[word]
+      }
+    })
+
+    return {
+      name: query,
+      type: 'unknown',
+      estimatedWattage: Math.round(baseEstimate),
+      suggestedHours: 1,
+      confidence: confidence
+    }
+  }
+
+  async predict(gadgets) {
+    if (!this.isInitialized) {
+      await this.initialize()
+    }
+
+    if (!gadgets || gadgets.length === 0) {
+      return {
+        peakHours: 'Add gadgets to see usage analysis',
+        monthlyTrend: 'Add gadgets to see consumption trends',
+        optimization: 'Add gadgets to see optimization tips'
+      }
+    }
+
+    try {
+      const peakHours = this.analyzePeakHours(gadgets)
+      const monthlyTrend = this.analyzeMonthlyTrend(gadgets)
+      const optimization = this.generateOptimizationTips(gadgets)
+
+      return {
+        peakHours,
+        monthlyTrend,
+        optimization
       }
     } catch (error) {
       console.error('Prediction failed:', error)
-      return null
+      return {
+        peakHours: 'Unable to analyze at this time',
+        monthlyTrend: 'Unable to analyze at this time',
+        optimization: 'Unable to analyze at this time'
+      }
     }
   }
 
-  getPeakHoursMessage(score, gadgets) {
-    const totalPower = gadgets.reduce((sum, g) => sum + (g.powerRating * g.quantity), 0)
-    const dayHours = gadgets.filter(g => g.customHours >= 6 && g.customHours <= 18).length
-    const nightHours = gadgets.length - dayHours
-    
-    const highPowerGadgets = gadgets
-      .filter(g => g.powerRating > 1.0)
-      .map(g => g.name)
-      .join(', ')
+  analyzePeakHours(gadgets) {
+    const hourlyUsage = new Array(24).fill(0)
+    let totalDailyConsumption = 0
 
-    if (score > 0.7) {
-      return `Optimal usage pattern detected! ${dayHours} of ${gadgets.length} appliances run during solar peak hours. ` +
-             `This maximizes solar energy utilization and reduces grid dependency.`
-    } else if (score > 0.3) {
-      return `Mixed usage detected - ${dayHours} daytime and ${nightHours} evening appliances. ` +
-             `High-power appliances (${highPowerGadgets}) could be scheduled during peak sun hours (10 AM - 4 PM) ` +
-             `to maximize solar efficiency.`
-    } else {
-      return `Heavy evening usage detected. Consider running ${highPowerGadgets} during daylight hours ` +
-             `to optimize solar power usage and reduce evening grid load.`
-    }
+    gadgets.forEach(gadget => {
+      const hours = gadget.customHours || gadget.avgDailyUsage
+      const power = gadget.powerRating * (gadget.quantity || 1)
+      totalDailyConsumption += power * hours
+
+      // Estimate usage distribution
+      if (gadget.category === 'lighting') {
+        // Evening hours for lighting
+        for (let i = 17; i < 23; i++) hourlyUsage[i] += power
+      } else if (gadget.category === 'hvac') {
+        // Peak hours for HVAC
+        for (let i = 12; i < 20; i++) hourlyUsage[i] += power
+      } else {
+        // Distribute usage across typical hours
+        const startHour = this.getTypicalStartHour(gadget)
+        for (let i = 0; i < hours; i++) {
+          hourlyUsage[(startHour + i) % 24] += power
+        }
+      }
+    })
+
+    // Find peak hours
+    const peakHour = hourlyUsage.indexOf(Math.max(...hourlyUsage))
+    return `Peak usage occurs around ${this.formatHour(peakHour)}. ` +
+           `Daily consumption: ${totalDailyConsumption.toFixed(1)} kWh`
   }
 
-  getMonthlyTrendMessage(score, dailyUsage) {
-    const monthlyUsage = dailyUsage * 30
-    const yearlyUsage = monthlyUsage * 12
-    const co2Reduction = yearlyUsage * 0.4 // 0.4 kg CO2 per kWh average
-    const treesEquivalent = (co2Reduction / 21).toFixed(1) // Average tree absorbs 21 kg CO2 per year
+  analyzeMonthlyTrend(gadgets) {
+    const monthlyConsumption = gadgets.reduce((total, gadget) => {
+      const dailyUsage = gadget.powerRating * (gadget.customHours || gadget.avgDailyUsage) * (gadget.quantity || 1)
+      return total + (dailyUsage * 30) // Monthly estimate
+    }, 0)
 
-    if (score > 0.7) {
-      return `Seasonal impact analysis: Summer consumption could peak at ${(monthlyUsage + monthlyUsage * 0.3).toFixed(1)} kWh/month ` +
-             `due to cooling needs. Yearly usage: ${yearlyUsage.toFixed(1)} kWh. ` +
-             `Solar adoption could reduce CO2 emissions by ${co2Reduction.toFixed(1)} kg/year (equivalent to ${treesEquivalent} trees).`
-    } else if (score > 0.3) {
-      return `Projected monthly usage: ${monthlyUsage.toFixed(1)} kWh with moderate seasonal variations. ` +
-             `Annual consumption: ${yearlyUsage.toFixed(1)} kWh. ` +
-             `Solar energy could offset ${(yearlyUsage * 0.7).toFixed(1)} kWh of grid power per year.`
-    } else {
-      return `Stable consumption pattern: ${monthlyUsage.toFixed(1)} kWh/month. ` +
-             `Annual consumption: ${yearlyUsage.toFixed(1)} kWh. ` +
-             `Your consistent usage pattern is ideal for solar power planning.`
-    }
+    const seasonalImpact = this.estimateSeasonalImpact(gadgets)
+
+    return `Estimated monthly consumption: ${monthlyConsumption.toFixed(1)} kWh. ` +
+           `${seasonalImpact}`
   }
 
-  getOptimizationMessage(score, gadgets) {
-    const efficiencyAnalysis = gadgets.reduce((acc, gadget) => {
-      const rating = gadget.energyEfficiency
-      const dailyConsumption = gadget.powerRating * gadget.customHours * gadget.quantity
-      
-      acc.totalConsumption += dailyConsumption
-      
-      // Categorize by efficiency rating
-      if (rating === 'A+++') {
+  generateOptimizationTips(gadgets) {
+    const analysis = gadgets.reduce((acc, gadget) => {
+      const dailyConsumption = gadget.powerRating * (gadget.customHours || gadget.avgDailyUsage) * (gadget.quantity || 1)
+      const rating = gadget.efficiency || 'B'
+
+      if (rating === 'A+++' || rating === 'A++') {
         acc.ultraEfficient.push({ name: gadget.name, consumption: dailyConsumption })
-      } else if (rating === 'A++') {
-        acc.veryEfficient.push({ name: gadget.name, consumption: dailyConsumption })
       } else if (rating === 'A+') {
         acc.efficient.push({ name: gadget.name, consumption: dailyConsumption })
-      } else if (rating === 'A') {
+      } else {
         acc.standard.push({
           name: gadget.name,
           consumption: dailyConsumption,
-          potential: dailyConsumption * 0.4 // 40% potential savings to A+++
+          potential: dailyConsumption * 0.4 // 40% potential savings
         })
       }
+      acc.totalConsumption += dailyConsumption
       return acc
     }, {
       totalConsumption: 0,
-      ultraEfficient: [], // A+++
-      veryEfficient: [], // A++
-      efficient: [],     // A+
-      standard: []       // A
+      ultraEfficient: [],
+      efficient: [],
+      standard: []
     })
 
-    // Generate message based on efficiency distribution
-    if (efficiencyAnalysis.standard.length > 0) {
-      const upgradableAppliances = efficiencyAnalysis.standard
+    if (analysis.standard.length > 0) {
+      const upgradableAppliances = analysis.standard
         .map(item => `${item.name} (${item.consumption.toFixed(1)} kWh/day)`)
         .join(', ')
       
-      const totalSavings = efficiencyAnalysis.standard
+      const totalSavings = analysis.standard
         .reduce((sum, item) => sum + item.potential, 0)
-      const yearlySavings = totalSavings * 365 * 0.15 // $0.15/kWh
 
-      return `Energy-saving opportunity! These appliances have standard efficiency (A rating): ${upgradableAppliances}. ` +
-             `Upgrading to A+++ models could save approximately ${totalSavings.toFixed(1)} kWh/day ` +
-             `($${yearlySavings.toFixed(2)}/year). This represents a ${((totalSavings / efficiencyAnalysis.totalConsumption) * 100).toFixed(1)}% ` +
-             `reduction in your total energy consumption.`
-    } else if (efficiencyAnalysis.efficient.length > efficiencyAnalysis.ultraEfficient.length) {
-      // More A+ than A+++ appliances
-      const upgradePotential = efficiencyAnalysis.efficient
-        .map(item => item.name)
-        .join(', ')
-      
-      return `Good efficiency profile! Your appliances rated A+ (${upgradePotential}) ` +
-             `are energy-efficient, but could be upgraded to A+++ for 20-30% more savings. ` +
-             `Total daily consumption: ${efficiencyAnalysis.totalConsumption.toFixed(1)} kWh.`
-    } else if (efficiencyAnalysis.veryEfficient.length > efficiencyAnalysis.ultraEfficient.length) {
-      // More A++ than A+++ appliances
-      return `Very good efficiency profile! Most of your appliances are A++ rated. ` +
-             `Total daily consumption: ${efficiencyAnalysis.totalConsumption.toFixed(1)} kWh. ` +
-             `Consider A+++ models for future replacements for maximum efficiency.`
-    } else {
-      // Mostly A+++ appliances
-      return `Excellent energy efficiency! Your appliances use the highest A+++ rating technology. ` +
-             `Current daily consumption: ${efficiencyAnalysis.totalConsumption.toFixed(1)} kWh. ` +
-             `Maintain peak efficiency with regular maintenance.`
+      return `Upgrade potential found! Consider replacing: ${upgradableAppliances}. ` +
+             `Potential energy savings: ${totalSavings.toFixed(1)} kWh/day ` +
+             `(${(totalSavings * 365).toFixed(1)} kWh/year)`
     }
+
+    return `Your appliances are energy efficient. ` +
+           `Total daily consumption: ${analysis.totalConsumption.toFixed(1)} kWh. ` +
+           `Keep maintaining optimal usage patterns.`
   }
 
-  getEfficiencyScore(rating) {
-    const scores = {
-      'A+++': 1.0,
-      'A++': 0.8,
-      'A+': 0.6,
-      'A': 0.4,
-      'B': 0.2
+  getTypicalStartHour(gadget) {
+    const startHours = {
+      'appliance': 8, // Kitchen appliances typically used during day
+      'electronics': 9, // Office equipment during work hours
+      'hvac': 12, // Peak during afternoon
+      'lighting': 17 // Evening usage
     }
-    return scores[rating] || 0.2
+    return startHours[gadget.category] || 8
+  }
+
+  formatHour(hour) {
+    return `${hour % 12 || 12}${hour < 12 ? 'AM' : 'PM'}`
+  }
+
+  estimateSeasonalImpact(gadgets) {
+    const hasHVAC = gadgets.some(g => g.category === 'hvac')
+    if (hasHVAC) {
+      return 'Expect 20-30% higher consumption during peak summer/winter months.'
+    }
+    return 'Minimal seasonal variation expected.'
   }
 }
 
-export const energyAI = new EnergyAI() 
+export const energyAI = new EnergyAIService() 

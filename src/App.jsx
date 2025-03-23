@@ -26,6 +26,12 @@ import Calculator from './components/calculator/Calculator'
 import GetStarted from './components/contact/GetStarted'
 import SystemDesign from './components/design/SystemDesign'
 import EquipmentRecommendation from './components/design/EquipmentRecommendation'
+import PartnerDashboard from './components/partner/PartnerDashboard'
+import PartnerProjects from './components/partner/PartnerProjects'
+import PartnerPayments from './components/partner/PartnerPayments'
+import PartnerSettings from './components/partner/PartnerSettings'
+import PartnerLogin from './components/partner/PartnerLogin'
+import ProtectedRoute from './components/partner/ProtectedRoute'
 
 const navItems = [
   {
@@ -76,12 +82,21 @@ const navItems = [
       { title: 'Performance Reports', path: '/monitoring/reports' },
     ],
   },
+  // {
+  //   title: 'Resources',
+  //   dropdownItems: [
+  //     { title: 'Energy Efficiency Tips', path: '/resources/efficiency' },
+  //     { title: 'Educational Content', path: '/resources/education' },
+  //     { title: 'Support Center', path: '/resources/support' },
+  //   ],
+  // },
   {
-    title: 'Resources',
+    title: 'Partner Portal',
     dropdownItems: [
-      { title: 'Energy Efficiency Tips', path: '/resources/efficiency' },
-      { title: 'Educational Content', path: '/resources/education' },
-      { title: 'Support Center', path: '/resources/support' },
+      { title: 'Dashboard', path: '/partner/dashboard' },
+      { title: 'Project Tracking', path: '/partner/projects' },
+      { title: 'Payment History', path: '/partner/payments' },
+      { title: 'Account Settings', path: '/partner/settings' },
     ],
   },
 ]
@@ -177,6 +192,27 @@ function App() {
           <Route path="/get-started" element={<GetStarted />} />
           <Route path="/system-design" element={<SystemDesign />} />
           <Route path="/equipment" element={<EquipmentRecommendation />} />
+          <Route path="/partner/login" element={<PartnerLogin />} />
+          <Route path="/partner/dashboard" element={
+            <ProtectedRoute>
+              <PartnerDashboard />
+            </ProtectedRoute>
+          } />
+          <Route path="/partner/projects" element={
+            <ProtectedRoute>
+              <PartnerProjects />
+            </ProtectedRoute>
+          } />
+          <Route path="/partner/payments" element={
+            <ProtectedRoute>
+              <PartnerPayments />
+            </ProtectedRoute>
+          } />
+          <Route path="/partner/settings" element={
+            <ProtectedRoute>
+              <PartnerSettings />
+            </ProtectedRoute>
+          } />
         </Routes>
         <Footer />
       </div>
