@@ -328,8 +328,8 @@ function OnboardingFlow() {
             )}
             <div className="solar-companies-grid">
               {solarCompanies.map((company) => (
-                <div 
-                  key={company.id} 
+                <div
+                  key={company.id}
                   className={`company-card ${selectedCompany?.id === company.id ? 'selected' : ''}`}
                   onClick={() => handleCompanySelection(company)}
                 >
@@ -355,7 +355,7 @@ function OnboardingFlow() {
               ))}
             </div>
             {selectedCompany && (
-              <button 
+              <button
                 className="onboarding-next-button"
                 onClick={handleFinalSubmit}
               >

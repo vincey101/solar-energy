@@ -2701,64 +2701,77 @@
   transition: width 0.3s ease;
 }
 
+/* Update navigation arrows styles */
 .navigation-arrows {
-  position: fixed;
-  right: 2rem;
-  top: 50%;
-  transform: translateY(-50%);
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
   display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  z-index: 100;
+  flex-direction: row;
+  /* Change to horizontal layout */
+  gap: 2rem;
+  /* Increase gap between arrows */
+  z-index: 10;
+  top: calc(100% + 0.5rem);
+  /* Move closer to progress bar */
 }
 
 .nav-arrow {
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  background: #006241;
+  background: none;
+  /* Remove background */
   border: none;
-  color: white;
+  cursor: pointer;
+  padding: 0.25rem;
+  /* Reduce padding */
   display: flex;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 12px rgba(0, 98, 65, 0.2);
+  transition: transform 0.3s ease;
+}
+
+.nav-arrow svg {
+  font-size: 1.25rem;
+  /* Slightly smaller icons */
+  color: #006241;
+  /* Keep the arrow color green */
 }
 
 .nav-arrow:hover {
-  transform: scale(1.1);
-  background: #004d33;
+  transform: translateX(-2px);
+  /* Change hover animation direction */
 }
 
-.nav-arrow.up {
-  opacity: 0.8;
+.nav-arrow.down:hover {
+  transform: translateX(2px);
+  /* Change hover animation direction */
 }
 
-.nav-arrow.down {
-  opacity: 0.8;
+/* Update progress indicator margin */
+.progress-indicator {
+  margin-bottom: 3rem;
+  /* Default margin for desktop */
 }
 
-/* Update existing onboarding-flow styles */
-.onboarding-flow {
-  padding-right: 6rem;
-  /* Make room for the navigation arrows */
-}
-
-/* Make the content area responsive */
+/* Mobile adjustments */
 @media (max-width: 768px) {
+  .progress-indicator {
+    margin-bottom: 2rem;
+    /* Reduced margin for mobile */
+  }
+
   .navigation-arrows {
-    right: 1rem;
+    top: calc(100% + 0.25rem);
+    /* Move arrows even closer to progress bar on mobile */
   }
 
   .nav-arrow {
-    width: 40px;
-    height: 40px;
+    padding: 0.15rem;
+    /* Slightly reduce padding on mobile */
   }
 
-  .onboarding-flow {
-    padding-right: 4rem;
+  .nav-arrow svg {
+    font-size: 1rem;
+    /* Smaller icons on mobile */
   }
 }
 
