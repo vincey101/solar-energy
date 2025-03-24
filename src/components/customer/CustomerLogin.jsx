@@ -1,24 +1,21 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { FaEnvelope, FaLock, FaBuilding, FaPhone } from 'react-icons/fa'
-import partnerHero from '../../assets/images/partner-logo.jpg'
-import '../../styles/partner.css'
+import { FaEnvelope, FaLock, FaPhone } from 'react-icons/fa'
+import customerHero from '../../assets/images/home-solar.jpg'
+import '../../styles/customer.css'
 
-function PartnerLogin() {
+function CustomerLogin() {
     const [credentials, setCredentials] = useState({
         email: '',
-        companyName: '',
         phoneNumber: ''
     })
     const [error, setError] = useState('')
     const navigate = useNavigate()
 
-    // Add effect to set navbar color
     useEffect(() => {
         const navbar = document.querySelector('.navbar')
         navbar.style.backgroundColor = '#000'
 
-        // Cleanup function to reset navbar color
         return () => {
             navbar.style.backgroundColor = ''
         }
@@ -26,27 +23,25 @@ function PartnerLogin() {
 
     const handleSubmit = async (e) => {
         e.preventDefault()
-        // Here you would validate against your backend
-        // For now, we'll use localStorage to simulate authentication
-        const partners = JSON.parse(localStorage.getItem('partners') || '[]')
-        const partner = partners.find(p => p.email === credentials.email)
+        // Simulated authentication - replace with real backend auth
+        const customers = JSON.parse(localStorage.getItem('customers') || '[]')
+        const customer = customers.find(c => c.email === credentials.email)
 
-        if (partner) {
-            // In real app, you'd hash passwords and use proper auth
-            localStorage.setItem('currentPartner', JSON.stringify(partner))
-            navigate('/partner/dashboard')
+        if (customer) {
+            localStorage.setItem('currentCustomer', JSON.stringify(customer))
+            navigate('/customer/dashboard')
         } else {
-            setError('Invalid credentials or partner not registered')
+            setError('Invalid credentials or customer not registered')
         }
     }
 
     return (
-        <div className="partner-login">
-            <div className="partner-hero" style={{
-                backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url(${partnerHero})`
+        <div className="customer-login">
+            <div className="customer-hero" style={{
+                backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url(${customerHero})`
             }}>
-                <h1>Partner Portal</h1>
-                <p>Join our network of trusted solar energy partners</p>
+                <h1>Customer Portal</h1>
+                <p>Monitor and manage your solar energy system</p>
             </div>
 
             <div className="login-card">
@@ -81,22 +76,6 @@ function PartnerLogin() {
 
                     <div className="form-group">
                         <div className="input-group">
-                            <FaBuilding className="input-icon" />
-                            <input
-                                type="text"
-                                placeholder="Company Name"
-                                value={credentials.companyName}
-                                onChange={(e) => setCredentials({
-                                    ...credentials,
-                                    companyName: e.target.value
-                                })}
-                                required
-                            />
-                        </div>
-                    </div>
-
-                    <div className="form-group">
-                        <div className="input-group">
                             <FaPhone className="input-icon" />
                             <input
                                 type="tel"
@@ -117,11 +96,11 @@ function PartnerLogin() {
                 </form>
 
                 <div className="login-footer">
-                    <p>Not registered yet? <a href="/get-started?type=partner">Register as Partner</a></p>
+                    <p>Not registered yet? <a href="/get-started">Register as Customer</a></p>
                 </div>
             </div>
         </div>
     )
 }
 
-export default PartnerLogin 
+export default CustomerLogin 

@@ -1,8 +1,10 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { useLocation } from 'react-router-dom'
 import contactHero from '../../assets/images/contact-us.jpg'
 import { FaUser, FaBuilding } from 'react-icons/fa'
 
 function GetStarted() {
+  const location = useLocation()
   const [registrationType, setRegistrationType] = useState('user')
   const [formData, setFormData] = useState({
     // Common fields
@@ -24,6 +26,15 @@ function GetStarted() {
     insuranceInfo: '',
     numberOfEmployees: '',
   })
+
+  useEffect(() => {
+    // Get the type from URL query parameters
+    const params = new URLSearchParams(location.search)
+    const type = params.get('type')
+    if (type === 'partner') {
+      setRegistrationType('partner')
+    }
+  }, [location])
 
   const handleSubmit = (e) => {
     e.preventDefault()

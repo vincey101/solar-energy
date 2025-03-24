@@ -31,7 +31,9 @@ import PartnerProjects from './components/partner/PartnerProjects'
 import PartnerPayments from './components/partner/PartnerPayments'
 import PartnerSettings from './components/partner/PartnerSettings'
 import PartnerLogin from './components/partner/PartnerLogin'
+import CustomerLogin from './components/customer/CustomerLogin'
 import ProtectedRoute from './components/partner/ProtectedRoute'
+import OnboardingFlow from './components/home/OnboardingFlow'
 
 const navItems = [
   {
@@ -167,9 +169,7 @@ function App() {
         <Routes>
           <Route path="/" element={
             <>
-              <HeroSlider />
-              <PowerSection />
-              <ReviewSection />
+              <OnboardingFlow />
             </>
           } />
           <Route path="/referral" element={<ReferralDashboard />} />
@@ -192,6 +192,7 @@ function App() {
           <Route path="/get-started" element={<GetStarted />} />
           <Route path="/system-design" element={<SystemDesign />} />
           <Route path="/equipment" element={<EquipmentRecommendation />} />
+          <Route path="/customer/login" element={<CustomerLogin />} />
           <Route path="/partner/login" element={<PartnerLogin />} />
           <Route path="/partner/dashboard" element={
             <ProtectedRoute>
