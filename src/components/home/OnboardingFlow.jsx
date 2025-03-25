@@ -1,9 +1,27 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { FaChevronUp, FaChevronDown, FaHome, FaIndustry, FaBuilding, FaSearch, FaPlus, FaMinus } from 'react-icons/fa'
 import { energyAI } from '../../services/energyAI'
 import { locationService } from '../../services/locationService'
 import { googlePlacesService } from '../../services/googlePlacesService'
+import mapboxgl from 'mapbox-gl'
+import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder'
+import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css'
+
+// Set Mapbox token
+mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_TOKEN
+
+const formatDistance = (meters) => {
+  const miles = meters * 0.000621371;
+  return miles.toFixed(1) + ' miles';
+}
+
+const formatOpeningHours = (hours) => {
+  if (!hours) return 'Hours not available';
+  const now = new Date();
+  const day = now.getDay();
+  return hours[day] || 'Hours not available';
+}
 
 function OnboardingFlow() {
   const [step, setStep] = useState(1)
@@ -17,6 +35,13 @@ function OnboardingFlow() {
   const [solarCompanies, setSolarCompanies] = useState([])
   const [selectedCompany, setSelectedCompany] = useState(null)
   const navigate = useNavigate()
+  const mapContainer = useRef(null)
+  const map = useRef(null)
+  const [lng, setLng] = useState(null)
+  const [lat, setLat] = useState(null)
+  const [zoom, setZoom] = useState(12)
+  const [nearbyCompanies, setNearbyCompanies] = useState([])
+  const [isLoading, setIsLoading] = useState(false)
 
   const handleBack = () => {
     if (step > 1) {
@@ -63,7 +88,7 @@ function OnboardingFlow() {
           name: result.name,
           powerRating: result.estimatedWattage / 1000, // Convert to kW
           quantity: 1,
-          customHours: 1,
+          hours: 1, // Add default hours
           brand: 'Generic',
           model: 'Custom'
         }
@@ -81,7 +106,8 @@ function OnboardingFlow() {
 
   const updateTotalPower = (gadgets) => {
     const total = gadgets.reduce((sum, gadget) => {
-      return sum + (gadget.powerRating * gadget.quantity)
+      const hours = gadget.hours || 1 // Fallback to 1 if hours is undefined
+      return sum + (gadget.powerRating * gadget.quantity * hours)
     }, 0)
     setTotalPower(total)
   }
@@ -101,6 +127,26 @@ function OnboardingFlow() {
     updateTotalPower(updatedGadgets)
   }
 
+  const updateHours = (index, newHours) => {
+    // Convert to number and handle invalid inputs
+    let hours = parseFloat(newHours)
+
+    // If input is empty, NaN, or invalid, set to 1
+    if (isNaN(hours) || hours < 0) {
+      hours = 1
+    }
+    // Cap at 24 hours
+    if (hours > 24) {
+      hours = 24
+    }
+
+    const updatedGadgets = selectedGadgets.map((gadget, i) =>
+      i === index ? { ...gadget, hours: hours } : gadget
+    )
+    setSelectedGadgets(updatedGadgets)
+    updateTotalPower(updatedGadgets)
+  }
+
   const handleNext = () => {
     if (selectedGadgets.length > 0) {
       setStep(5) // Move to payment options instead of navigating away
@@ -115,17 +161,85 @@ function OnboardingFlow() {
 
   const detectLocation = async () => {
     try {
-      const coords = await locationService.getLocation()
-      const locationDetails = await locationService.reverseGeocode(
-        coords.latitude,
-        coords.longitude
-      )
+      setIsLoading(true)
+      const position = await new Promise((resolve, reject) => {
+        navigator.geolocation.getCurrentPosition(resolve, reject)
+      })
+
+      const { latitude, longitude } = position.coords
+
+      // Updated query to be more specific about solar companies
+      const query = 'solar+energy+company+OR+solar+panel+installer+OR+solar+system+provider'
+      const [locationData, companiesData] = await Promise.all([
+        fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${longitude},${latitude}.json?access_token=${mapboxgl.accessToken}`),
+        fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${query}.json?proximity=${longitude},${latitude}&access_token=${mapboxgl.accessToken}&limit=10&types=poi`)
+      ])
+
+      const locationJson = await locationData.json()
+      const companiesJson = await companiesData.json()
+
+      // Set location info
+      const locationDetails = {
+        city: locationJson.features.find(f => f.place_type.includes('place'))?.text,
+        state: locationJson.features.find(f => f.place_type.includes('region'))?.text
+      }
       setLocation(locationDetails)
-      // Fetch solar companies based on location
-      fetchSolarCompanies(locationDetails)
+
+      // Process nearby companies with more details
+      const companies = companiesJson.features.map(feature => ({
+        id: feature.id,
+        name: feature.text,
+        address: feature.place_name,
+        coordinates: feature.center,
+        distance: feature.properties.distance,
+        type: feature.properties.category || 'Solar Company',
+        phone: feature.properties.tel || 'Not available',
+        website: feature.properties.website || '#',
+        hours: feature.properties.hours || 'Hours not available',
+        rating: feature.properties.rating || 'N/A'
+      }))
+
+      setNearbyCompanies(companies)
+
+      // Initialize map
+      if (mapContainer.current) {
+        const map = new mapboxgl.Map({
+          container: mapContainer.current,
+          style: 'mapbox://styles/mapbox/streets-v12',
+          center: [longitude, latitude],
+          zoom: 12
+        })
+
+        // Add user location marker
+        new mapboxgl.Marker({ color: '#FF0000' })
+          .setLngLat([longitude, latitude])
+          .setPopup(new mapboxgl.Popup().setHTML('<h3>Your Location</h3>'))
+          .addTo(map)
+
+        // Add markers for companies with enhanced popups
+        companies.forEach(company => {
+          new mapboxgl.Marker({ color: '#006241' })
+            .setLngLat(company.coordinates)
+            .setPopup(
+              new mapboxgl.Popup({ offset: 25 })
+                .setHTML(`
+                  <div class="company-popup">
+                    <h3>${company.name}</h3>
+                    <p><strong>Address:</strong> ${company.address}</p>
+                    <p><strong>Distance:</strong> ${formatDistance(company.distance)}</p>
+                    <p><strong>Phone:</strong> ${company.phone}</p>
+                    <p><strong>Hours:</strong> ${company.hours}</p>
+                  </div>
+                `)
+            )
+            .addTo(map)
+        })
+      }
+
     } catch (error) {
       console.error('Location detection failed:', error)
-      // Fallback to manual location input or default companies
+    } finally {
+      setIsLoading(false)
     }
   }
 
@@ -149,6 +263,13 @@ function OnboardingFlow() {
   const handleFinalSubmit = () => {
     navigate(`/get-started?type=user&gadgets=${encodeURIComponent(JSON.stringify(selectedGadgets))}&payment=${paymentOption}&company=${encodeURIComponent(JSON.stringify(selectedCompany))}`)
   }
+
+  // Call detectLocation when step 6 is reached
+  useEffect(() => {
+    if (step === 6) {
+      detectLocation()
+    }
+  }, [step])
 
   return (
     <div className="onboarding-flow">
@@ -242,24 +363,43 @@ function OnboardingFlow() {
                     <div className="onboarding-gadget-details">
                       <h3>{gadget.name}</h3>
                       <p className="onboarding-gadget-power">
-                        Power: {gadget.powerRating} kW × {gadget.quantity} = {(gadget.powerRating * gadget.quantity).toFixed(2)} kW
+                        Power: {gadget.powerRating} kW × {gadget.quantity} × {gadget.hours}h = {(gadget.powerRating * gadget.quantity * gadget.hours).toFixed(2)} kWh/day
                       </p>
                     </div>
-                    <div className="onboarding-quantity-control">
-                      <button onClick={() => updateQuantity(index, gadget.quantity - 1)}>
-                        <FaMinus />
-                      </button>
-                      <span>{gadget.quantity}</span>
-                      <button onClick={() => updateQuantity(index, gadget.quantity + 1)}>
-                        <FaPlus />
+                    <div className="onboarding-gadget-controls">
+                      <div className="onboarding-quantity-control">
+                        <button onClick={() => updateQuantity(index, gadget.quantity - 1)}>
+                          <FaMinus />
+                        </button>
+                        <span>{gadget.quantity}</span>
+                        <button onClick={() => updateQuantity(index, gadget.quantity + 1)}>
+                          <FaPlus />
+                        </button>
+                      </div>
+                      <div className="onboarding-hours-control">
+                        <label>Hours/day:</label>
+                        <input
+                          type="number"
+                          value={gadget.hours || 1}
+                          onChange={(e) => updateHours(index, e.target.value)}
+                          min="0"
+                          max="24"
+                          step="0.5"
+                          className="hours-input"
+                          onBlur={(e) => {
+                            if (!e.target.value || isNaN(e.target.value)) {
+                              updateHours(index, 1)
+                            }
+                          }}
+                        />
+                      </div>
+                      <button
+                        className="onboarding-remove-gadget"
+                        onClick={() => removeGadget(index)}
+                      >
+                        Remove
                       </button>
                     </div>
-                    <button
-                      className="onboarding-remove-gadget"
-                      onClick={() => removeGadget(index)}
-                    >
-                      Remove
-                    </button>
                   </div>
                 ))
               )}
@@ -269,7 +409,7 @@ function OnboardingFlow() {
               <div className="onboarding-power-summary">
                 <div className="onboarding-total-power">
                   <span>Total Power Required:</span>
-                  <strong>{totalPower.toFixed(2)} kW</strong>
+                  <strong>{totalPower.toFixed(2)} kWh/day</strong>
                 </div>
               </div>
             )}
@@ -320,45 +460,57 @@ function OnboardingFlow() {
 
         {step === 6 && (
           <div className="onboarding-step">
-            <h2>Available Solar Companies Near You</h2>
-            {location && (
-              <p className="location-info">
-                Showing results for {location.city}, {location.state}
-              </p>
-            )}
-            <div className="solar-companies-grid">
-              {solarCompanies.map((company) => (
-                <div
-                  key={company.id}
-                  className={`company-card ${selectedCompany?.id === company.id ? 'selected' : ''}`}
-                  onClick={() => handleCompanySelection(company)}
-                >
-                  <h3>{company.name}</h3>
-                  <div className="company-rating">
-                    Rating: {company.rating}/5
-                  </div>
-                  <div className="company-packages">
-                    {company.packages.map((pkg, index) => (
-                      <div key={index} className="package-item">
-                        <h4>{pkg.name}</h4>
-                        <p className="package-capacity">{pkg.capacity}</p>
-                        <p className="package-price">{pkg.price}</p>
-                        <ul className="package-features">
-                          {pkg.features.map((feature, i) => (
-                            <li key={i}>{feature}</li>
-                          ))}
-                        </ul>
+            <h2>Solar Companies Near You</h2>
+            {isLoading ? (
+              <div className="loading-spinner">Finding solar companies near you...</div>
+            ) : (
+              <>
+                {location && (
+                  <p className="location-info">
+                    Showing results for {location.city}, {location.state}
+                  </p>
+                )}
+                <div className="map-container" ref={mapContainer} />
+                <div className="solar-companies-list">
+                  {nearbyCompanies.map((company) => (
+                    <div
+                      key={company.id}
+                      className={`company-card ${selectedCompany?.id === company.id ? 'selected' : ''}`}
+                      onClick={() => handleCompanySelection(company)}
+                    >
+                      <div className="company-header">
+                        <h3>{company.name}</h3>
+                        <span className="distance">{formatDistance(company.distance)}</span>
                       </div>
-                    ))}
-                  </div>
+                      <div className="company-details">
+                        <p className="company-address">
+                          <strong>Address:</strong> {company.address}
+                        </p>
+                        <p className="company-phone">
+                          <strong>Phone:</strong> {company.phone}
+                        </p>
+                        <p className="company-hours">
+                          <strong>Hours:</strong> {company.hours}
+                        </p>
+                        {company.rating !== 'N/A' && (
+                          <p className="company-rating">
+                            <strong>Rating:</strong> {company.rating}
+                          </p>
+                        )}
+                        {company.website !== '#' && (
+                          <a href={company.website} target="_blank" rel="noopener noreferrer"
+                            className="company-website">
+                            Visit Website
+                          </a>
+                        )}
+                      </div>
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </div>
+              </>
+            )}
             {selectedCompany && (
-              <button
-                className="onboarding-next-button"
-                onClick={handleFinalSubmit}
-              >
+              <button className="onboarding-next-button" onClick={handleFinalSubmit}>
                 Continue with {selectedCompany.name}
               </button>
             )}

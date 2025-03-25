@@ -96,7 +96,7 @@ function CustomerLogin() {
                 </form>
 
                 <div className="login-footer">
-                    <p>Not registered yet? <a href="/get-started">Register as Customer</a></p>
+                    <p>Not registered yet? <a href="/get-started?type=user">Register as Customer</a></p>
                 </div>
             </div>
         </div>

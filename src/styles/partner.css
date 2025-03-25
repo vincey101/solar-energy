@@ -1,5 +1,6 @@
 .partner-dashboard {
   padding: 2rem;
+  color: #333; /* Dark gray, almost black */
 }
 
 .dashboard-stats {
@@ -346,4 +347,59 @@
   .login-card {
     padding: 2rem;
   }
+}
+
+.dashboard-header {
+  color: #000;
+  font-weight: 600;
+}
+
+.stats-card {
+  color: #333;
+}
+
+.stats-card h3 {
+  color: #000;
+  font-weight: 500;
+}
+
+.stats-value {
+  color: #000;
+  font-weight: 600;
+  font-size: 1.5rem;
+}
+
+.currency {
+  color: #000;
+}
+
+.transactions-section h2 {
+  color: #000;
+  font-weight: 600;
+}
+
+.transactions-table {
+  color: #333;
+}
+
+.transactions-table th {
+  color: #000;
+  font-weight: 600;
+}
+
+.transactions-table td {
+  color: #333;
+}
+
+/* Status colors remain colorful */
+.status-pending {
+  color: #f59e0b;
+}
+
+.status-completed {
+  color: #10b981;
+}
+
+.status-failed {
+  color: #ef4444;
 } 
