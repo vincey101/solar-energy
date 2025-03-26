@@ -1,0 +1,449 @@
+.referral-login {
+    min-height: calc(100vh - 70px);
+    margin-top: 70px;
+    background: #f5f5f5;
+}
+
+.referral-hero {
+    height: 300px;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: white;
+    padding: 2rem;
+    position: relative;
+}
+
+.referral-hero h1 {
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    z-index: 1;
+}
+
+.referral-hero p {
+    font-size: 1.2rem;
+    max-width: 600px;
+    opacity: 0.9;
+    z-index: 1;
+}
+
+.login-container {
+    max-width: 500px;
+    margin: -60px auto 2rem;
+    padding: 0 1rem;
+    position: relative;
+    z-index: 2;
+}
+
+.user-type-toggle {
+    display: flex;
+    background: white;
+    padding: 0.5rem;
+    border-radius: 12px;
+    margin-bottom: 1rem;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.user-type-toggle button {
+    flex: 1;
+    padding: 1rem;
+    border: none;
+    background: transparent;
+    color: #666;
+    font-weight: 500;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.user-type-toggle button.active {
+    background: #ff6b6b;
+    color: white;
+}
+
+.switch-type-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    border: 1px solid #ddd;
+    background: transparent;
+    color: #666;
+    border-radius: 8px;
+    cursor: pointer;
+    margin: 0 auto;
+    transition: all 0.3s ease;
+}
+
+.switch-type-btn:hover {
+    border-color: #ff6b6b;
+    color: #ff6b6b;
+}
+
+@media (max-width: 768px) {
+    .referral-hero {
+        height: 250px;
+    }
+
+    .referral-hero h1 {
+        font-size: 2.5rem;
+    }
+
+    .login-container {
+        margin-top: -40px;
+    }
+}
+
+@media (max-width: 480px) {
+    .referral-hero {
+        height: 200px;
+    }
+
+    .referral-hero h1 {
+        font-size: 2rem;
+    }
+
+    .user-type-toggle {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .user-type-toggle button {
+        width: 100%;
+    }
+}
+
+.referral-generate {
+    min-height: calc(100vh - 70px);
+    margin-top: 70px;
+    padding: 2rem;
+    background: #f5f5f5;
+}
+
+.referral-content {
+    max-width: 800px;
+    margin: 0 auto;
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.referral-content h1 {
+    color: #000;
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+}
+
+.referral-content p {
+    color: #000;
+    font-size: 1.1rem;
+    margin-bottom: 2rem;
+}
+
+.referral-link-container {
+    display: flex;
+    gap: 1rem;
+    margin: 2rem 0;
+    background: #f8f8f8;
+    padding: 1rem;
+    border-radius: 8px;
+    border: 1px solid #eee;
+}
+
+.referral-link-input {
+    flex: 1;
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 1rem;
+    background: white;
+    color: #000;
+    font-weight: 500;
+}
+
+.referral-link-input::placeholder {
+    color: #666;
+}
+
+.copy-button {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0 1.5rem;
+    background: #ff6b6b;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.copy-button:hover {
+    background: #ff5252;
+}
+
+.share-buttons {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin: 2rem 0;
+}
+
+.share-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 1rem;
+    border: none;
+    border-radius: 8px;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 500;
+}
+
+.share-button.whatsapp {
+    background: #25D366;
+}
+
+.share-button.facebook {
+    background: #1877F2;
+}
+
+.share-button.twitter {
+    background: #1DA1F2;
+}
+
+.share-button:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+}
+
+.referral-info {
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid #eee;
+}
+
+.referral-info h2 {
+    color: #333;
+    margin-bottom: 1rem;
+}
+
+.referral-info ul {
+    list-style: none;
+    padding: 0;
+}
+
+.referral-info li {
+    margin-bottom: 0.5rem;
+    padding-left: 1.5rem;
+    position: relative;
+    color: #666;
+}
+
+.referral-info li:before {
+    content: "•";
+    position: absolute;
+    left: 0;
+    color: #ff6b6b;
+}
+
+@media (max-width: 768px) {
+    .referral-generate {
+        padding: 1rem;
+    }
+    
+    .referral-content {
+        padding: 1.5rem;
+    }
+    
+    .share-buttons {
+        grid-template-columns: 1fr;
+    }
+}
+
+.customize-link {
+    margin-top: 1rem;
+    text-align: center;
+}
+
+.customize-button, .save-suffix {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background: transparent;
+    border: 1px solid #ff6b6b;
+    color: #ff6b6b;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin: 0 auto;
+}
+
+.customize-button:hover, .save-suffix:hover {
+    background: #ff6b6b;
+    color: white;
+}
+
+.suffix-edit {
+    display: flex;
+    gap: 1rem;
+    margin: 1rem 0;
+    width: 100%;
+    max-width: 500px;
+    margin: 1rem auto;
+}
+
+.suffix-input {
+    flex: 1;
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 1rem;
+    color: #000;
+    background: white;
+    outline: none;
+}
+
+.suffix-input:focus {
+    border-color: #ff6b6b;
+    box-shadow: 0 0 0 2px rgba(255, 107, 107, 0.1);
+}
+
+.suffix-input::placeholder {
+    color: #999;
+}
+
+.suffix-error {
+    color: #ff4444;
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+}
+
+/* Tablet Styles */
+@media (max-width: 1024px) {
+    .referral-content {
+        max-width: 90%;
+        margin: 0 auto;
+        padding: 1.5rem;
+    }
+
+    .referral-link-container {
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    .referral-link-input {
+        width: 100%;
+        font-size: 0.9rem;
+    }
+
+    .copy-button {
+        width: 100%;
+        justify-content: center;
+        padding: 0.75rem;
+    }
+
+    .share-buttons {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.75rem;
+    }
+}
+
+/* Mobile Styles */
+@media (max-width: 640px) {
+    .referral-generate {
+        padding: 1rem;
+        margin-top: 60px;
+    }
+
+    .referral-content {
+        padding: 1.25rem;
+    }
+
+    .referral-content h1 {
+        font-size: 1.5rem;
+    }
+
+    .referral-content p {
+        font-size: 1rem;
+    }
+
+    .share-buttons {
+        grid-template-columns: 1fr;
+    }
+
+    .share-button {
+        padding: 0.75rem;
+        font-size: 0.9rem;
+    }
+
+    .suffix-edit {
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    .save-suffix {
+        width: 100%;
+    }
+
+    .referral-info h2 {
+        font-size: 1.25rem;
+    }
+
+    .referral-info li {
+        font-size: 0.9rem;
+    }
+
+    .customize-button {
+        width: 100%;
+        max-width: 250px;
+    }
+}
+
+/* Small Mobile Styles */
+@media (max-width: 380px) {
+    .referral-content {
+        padding: 1rem;
+    }
+
+    .referral-link-container {
+        padding: 0.75rem;
+    }
+
+    .referral-link-input {
+        padding: 0.5rem;
+        font-size: 0.85rem;
+    }
+
+    .share-button {
+        font-size: 0.85rem;
+    }
+
+    .referral-info {
+        margin-top: 1.5rem;
+        padding-top: 1.5rem;
+    }
+}
+
+/* Handle tall mobile devices */
+@media (max-height: 700px) {
+    .referral-generate {
+        margin-top: 50px;
+    }
+
+    .referral-content {
+        margin-bottom: 2rem;
+    }
+} 

@@ -34,6 +34,8 @@ import PartnerLogin from './components/partner/PartnerLogin'
 import CustomerLogin from './components/customer/CustomerLogin'
 import ProtectedRoute from './components/partner/ProtectedRoute'
 import OnboardingFlow from './components/home/OnboardingFlow'
+import Referral from './components/contact/Referral'
+import ReferralGenerate from './components/contact/ReferralGenerate'
 
 const navItems = [
   {
@@ -71,7 +73,7 @@ const navItems = [
   {
     title: 'Referral Program',
     dropdownItems: [
-      { title: 'Generate Referral Link', path: '/referral/generate' },
+      { title: 'Generate Referral Link', path: '/referral' },
       { title: 'Commission Structure', path: '/referral/commission' },
       { title: 'Track Referrals', path: '/referral/tracking' },
     ],
@@ -172,10 +174,10 @@ function App() {
               <OnboardingFlow />
             </>
           } />
-          <Route path="/referral" element={<ReferralDashboard />} />
+          <Route path="/referral" element={<Referral />} />
           <Route path="/monitoring" element={<SystemMonitoring />} />
           <Route path="/ai-predictions" element={<EnergyPredictor />} />
-          <Route path="/referral/generate" element={<ReferralGenerator />} />
+          <Route path="/referral/generate" element={<ReferralGenerate />} />
           <Route path="/referral/commission" element={<CommissionStructure />} />
           <Route path="/referral/tracking" element={<ReferralTracking />} />
           <Route path="/monitoring/live" element={<LiveMonitoring />} />
